@@ -15,3 +15,9 @@
     --semester_2 TEXT NOT NULL,
     --average INTEGER NOT NULL);
 
+CREATE TABLE timetable (
+    timetable_id INTEGER NOT NULL, PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    subject TEXT NOT NULL,
+    teacher TEXT NOT NULL,
+    rooms TEXT NOT NULL); 
