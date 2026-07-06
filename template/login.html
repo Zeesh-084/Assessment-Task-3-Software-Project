@@ -1,43 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
+{% block content %}
 
-<head>
-    <title>StudySoul Login Page</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-
-<body>
     <div class="login-container">
         <h2>Welcome to StudySoul</h2>
         <p>Please login to continue</p>
-      <form action="" method="POST">
-        </label>Email:</label>
-        <input type="email" 
-            name="username" 
-            placeholder="Email" 
-            required
-        />
-    </div>
-    <div class="login-container">
-        </label>Password:</label>
-        <input type="password" 
-            name="password" 
-            placeholder="Password" 
-            required
-        />
-    </div>
 
-    <div class="login-container">
-        <a href="#">Forgot Password?</a>
-    </div>
+        <form action="" method="POST">
+            <div class="input-group">
+                <label>Email:</label>
+                <input type="email" name="email" placeholder="email" required/>
+            </div>
 
-        <button type="submit">Sign In</button>
-        <button type="button">Sign In Using Google</button>
-    </form>
-    <p>Don’t Have An Account? <a href="#">Sign Up</a></p>
+            <div class="input-group">
+                <label>Password:</label>
+                <input type="password" name="password" placeholder="Password" required/>
+            </div>
 
-</body>
+            <button type="submit">Sign Up</button>
+            <button type="button">Sign Up Using Google</button>
+        </form>
+
+        <p>Don’t Have An Account? <a href="signup.html">Sign Up</a></p>
 
 
-</html>
+{% endblock %}
