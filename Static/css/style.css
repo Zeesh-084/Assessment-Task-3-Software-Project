@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap");
+
+*   {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Canva Sans, sans-serif;
+}
+
+body {
+    background-color: #a2c8cd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
