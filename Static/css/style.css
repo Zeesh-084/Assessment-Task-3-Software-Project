@@ -15,22 +15,34 @@ body {
     height: 100vh;
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;         
+  width: 50%;       
+  height: 100vh;    
+  background-color: #6e699b; 
+  z-index: -1;      
+}
+
+
 .login-container {
     background-color: #92c9a9;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 500px;
 }
 
 .login-container h2 {
-    text-align: center;
+    text-align: left;
     margin-bottom: 20px;
 }
 
 .login-container p {
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: left;
+    margin-bottom: 35px;
 }
 
 .input-group {
@@ -86,4 +98,16 @@ button[type="button"] {
 
 .login-container a {
     color: #333;
+}
+
+.left-section img {
+    width: 75px;
+    height: 75px;
+    margin-right: 10px;
+}
+
+.left-section h1 {
+    font-size: 24px;
+    color: #000000;
+    text-align: left;
 }
