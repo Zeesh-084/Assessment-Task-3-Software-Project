@@ -6,7 +6,7 @@ import model as dbHandler
 
 app = Flask(__name__)
 
-@app.route('login.html', methods=['GET', 'POST'])
+@app.route('/login.html', methods=['GET', 'POST'])
 @app.route('/', methods=['POST', 'GET'])
 def login():
   return render_template('login.html')
