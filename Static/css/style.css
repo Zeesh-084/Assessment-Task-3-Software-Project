@@ -29,6 +29,18 @@ body {
   z-index: -1;      
 }
 
+/* Half of page for sign up page */
+.right-side {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;         
+  width: 50%;       
+  height: 100vh;    
+  background-color: #6e699b; 
+  z-index: -1;      
+}
+
 /* layout.html */
 .top-bar {
     display: flex;
