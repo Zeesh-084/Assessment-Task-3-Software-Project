@@ -1,20 +1,21 @@
 {% extends "layout.html" %} 
 {% block content %}
 
-    <header class="left-side">
+
+<div class="page login-page">
         <div class="login-container">
             <h2>Welcome to StudySoul</h2>
             <p>Please login to continue</p>
 
-            <form action="" method="POST">
+            <form action="/" method="POST">
                 <div class="input-group">
                     <label>Username:</label>
-                    <input type="text" name="username" placeholder="Username" required/>
+                    <input type="text" name="username" placeholder="Username" id="username" required/>
                 </div>
 
               <div class="input-group">
                     <label>Password:</label>
-                    <input type="password" name="password" placeholder="Password" required/>
+                    <input type="password" name="password" placeholder="Password" id="password" required/>
                 </div>
 
                 <div class="forgot-link">
@@ -27,7 +28,8 @@
 
             <p>Don’t Have An Account? <a href="signup.html">Sign Up</a></p>
         </div>
-    </header>
+    </div>
+</div>
 
 
 {% endblock %}
