@@ -7,28 +7,33 @@ import model as dbHandler
 app = Flask(__name__)
 
 
-@app.route('/login.html', methods=['GET', 'POST'])
-@app.route('/', methods=['POST', 'GET'])
+@app.route("/login.html", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def login():
-  if request.method == 'POST':
-    username = request.form['username']
-    password = request.form['password']
-    dbHandler.insertUser(username, password)
-    users = dbHandler.retrieveUsers()
-    return render_template('login.html', users=users)
-  else:
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        users = dbHandler.getUser(username, password)
+        if users:
+            return redirect("/index.html")
+        else:
+            return render_template( "login.html", page_class="login-page", error="Invalid username or password")
     return render_template("login.html", page_class="login-page")
 
-@app.route('/signup.html', methods=['GET', 'POST'])
+
+@app.route("/signup.html", methods=["GET", "POST"])
 def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+      if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        email = request.form.get["email"]
         dbHandler.insertUser(username, password, email)
-        return redirect('/login.html')
-    else:
-        return render_template("signup.html", page_class="signup-page")
+        return render_template("/login.html")
+      return render_template("signup.html", page_class="signup-page")
+
+@app.route("/index.html")
+def index():
+    return render_template("index.html", page_class="index-page")
 
 if __name__ == '__main__':
   app.run(debug=True, host='0.0.0.0', port=5000)
