@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request
 from flask import redirect
 import model as dbHandler
+import html
 
 app = Flask(__name__)
 
@@ -11,25 +12,27 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        username = html.escape(request.form["username"])
+        password = html.escape(request.form["password"])
         users = dbHandler.getUser(username, password)
         if users:
             return redirect("/index.html")
         else:
             return render_template( "login.html", page_class="login-page", error="Invalid username or password")
-    return render_template("login.html", page_class="login-page")
+    else:
+        return render_template("login.html", page_class="login-page")
 
 
 @app.route("/signup.html", methods=["GET", "POST"])
 def signup():
       if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        email = request.form.get["email"]
+        username = html.escape(request.form["username"])
+        password = html.escape(request.form["password"])
+        email = html.escape(request.form.get("email"))
         dbHandler.insertUser(username, password, email)
-        return render_template("/login.html")
-      return render_template("signup.html", page_class="signup-page")
+        return redirect("/login.html")
+      else:
+        return render_template("signup.html", page_class="signup-page")
 
 @app.route("/index.html")
 def index():
