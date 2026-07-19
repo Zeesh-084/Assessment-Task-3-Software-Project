@@ -1,0 +1,79 @@
+{% extends "layout.html" %} 
+{% block content %}
+
+<div class="home-container">
+    <section class="top-section">
+        <h1>Welcome, {{ username }}</h1>
+        <div class="dashboard-grid">
+            <div class="grade-table">
+                <button id="homepage">Grade Table</button>
+                <table>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Term 1</th>
+                        <th>Term 2</th>
+                        <th>S1</th>
+                        <th>Term 3</th>
+                        <th>Term 4</th>
+                        <th>Average</th>                        
+                    </tr>
+                    {% for row in grades %}
+                    <tr>
+                        <td>{{ row.subject }}</td>
+                        <td>{{ row.term1 }}</td>
+                        <td>{{ row.term2 }}</td>
+                        <td>{{ row.s1 }}</td>
+                        <td>{{ row.term3 }}</td>
+                        <td>{{ row.term4 }}</td>                      
+                        <td>{{ row.average }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="timetable">
+                <button id="homepage">Timetable</button>
+                <div class="timetable-grid">
+                    {% for block in timetable %}
+                        <div class="time-block {{ block.color }}">{{ block.label }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="top-section">
+        <div class="planner-grid">
+            <div class="goals-box">
+                <h2>Goals</h2>
+                <ul>
+                    {% for goal in goals %}
+                        <li>{{ goal.text }}</li>
+                    {% endfor %}
+                </ul>
+                <button>Edit Goals</button>
+            </div>
+            <div class="tasks-box">
+                <h2>Tasks</h2>
+                <ul>
+                    {% for task in tasks %}
+                        <li>{{ task.text }}</li>
+                    {% endfor %}
+                </ul>
+                <button>Edit Tasks</button>
+
+        </div>
+
+
+
+    </section>
+
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}
