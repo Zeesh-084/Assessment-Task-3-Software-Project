@@ -6,7 +6,7 @@
         <h1>Welcome, {{ username }}</h1>
         <div class="dashboard-grid">
             <div class="grade-table">
-                <button id="homepage">Grade Table</button>
+                <button type="titles">Grade Table</button>
                 <table>
                     <tr>
                         <th>Subject</th>
@@ -31,7 +31,7 @@
                 </table>
             </div>
             <div class="timetable">
-                <button id="homepage">Timetable</button>
+                <button type="titles">Timetable</button>
                 <div class="timetable-grid">
                     {% for block in timetable %}
                         <div class="time-block {{ block.color }}">{{ block.label }}</div>
@@ -50,7 +50,7 @@
                         <li>{{ goal.text }}</li>
                     {% endfor %}
                 </ul>
-                <button>Edit Goals</button>
+                <button type="titles">Edit Goals</button>
             </div>
             <div class="tasks-box">
                 <h2>Tasks</h2>
@@ -59,9 +59,34 @@
                         <li>{{ task.text }}</li>
                     {% endfor %}
                 </ul>
-                <button>Edit Tasks</button>
-
+                <button type="titles">Edit Tasks</button>
+            </div>
         </div>
+        <div class="calendar-box">
+                <button type="titles">Calendar</button>
+                <div class="calendar-grid">
+                    {% for day in calendar %}
+                        <div class="calendar-day">
+                            <span>{{ day.name }}</span>
+                            <div class="events">
+                                {% for event in day.events %}
+                                    <p>{{ event }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="schedule-box">
+                <button type="titles">Schedule</button>
+                <div class="schedule-grid">
+                    {% for item in schedule %}
+                        <div class="schedule-item">
+                            <span>{{ item.time }}</span>
+                            <p>{{ item.activity }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
 
 
 

@@ -151,8 +151,8 @@ body {
 button[type="submit"] {
     width: 100%;
     padding: 12px;
-    background-color: #4a4aff;
-    color: white;
+    background-color: #7ab1b8;
+    color: black;
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -163,8 +163,8 @@ button[type="submit"] {
 button[type="button"] {
     width: 100%;
     padding: 12px;
-    background-color: #4a4aff;
-    color: white;
+    background-color: #7ab1b8;
+    color: black;
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -189,4 +189,16 @@ button[type="button"] {
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+
+button[type="titles"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #6e699b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
