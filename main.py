@@ -1,12 +1,19 @@
-from flask import Flask
+from asyncio import events
+import secrets
+from flask import Flask, session
 from flask import render_template
 from flask import request
+from flask import Flask, render_template, request
+from flask_wtf.csrf import CSRFProtect
 from flask import redirect
 import model as dbHandler
 import html
+import os
 
 app = Flask(__name__)
-
+app.secret_key = secrets.token_hex(32)
+app.config['SECRET_KEY'] = 'your-secure-random-string'
+csrf = CSRFProtect(app)
 
 @app.route("/login.html", methods=["GET", "POST"])
 @app.route("/", methods=["GET", "POST"])
@@ -16,6 +23,7 @@ def login():
         password = html.escape(request.form["password"])
         users = dbHandler.getUser(username, password)
         if users:
+            session["username"] = username
             return redirect("/index.html")
         else:
             return render_template( "login.html", page_class="login-page", error="Invalid username or password")
@@ -36,7 +44,26 @@ def signup():
 
 @app.route("/index.html")
 def index():
-    return render_template("index.html", page_class="index-page")
+    username = session.get("username")
+
+    grades = dbHandler.getGrades(username)
+    timetable = dbHandler.getTimetable(username)
+    goals = dbHandler.getGoals(username)
+    tasks = dbHandler.getTassks(username)
+    events = dbHandler.getEvents(username)
+    schedule = dbHandler.getSchedule(username)
+
+    return render_template(
+        "index.html",
+        page_class="home-page",
+        username=username,
+        grades=grades,
+        timetable=timetable,
+        goals=goals,
+        tasks=tasks,
+        events=events,
+        schedule=schedule
+    )
 
 if __name__ == '__main__':
   app.run(debug=True, host='0.0.0.0', port=5000)

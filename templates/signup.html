@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="page signup-page">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="login-container">
             <h2>Sign Up</h2>
             <p>Create a free account now!</p>
