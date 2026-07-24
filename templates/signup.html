@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="page signup-page">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="login-container">
             <h2>Sign Up</h2>
             <p>Create a free account now!</p>
             
-            <form action="/signup.html" method="POST">
+            <form action="/signup" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="input-group">
                     <label>Username:</label>
                     <input type="text" name="username" placeholder="Username" id="username" required minlength="3" maxlength="20"/>

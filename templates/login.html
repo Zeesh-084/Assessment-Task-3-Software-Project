@@ -3,12 +3,12 @@
 
 
 <div class="page login-page">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="login-container">
             <h2>Welcome to StudySoul</h2>
             <p>Please login to continue</p>
 
-            <form action="/" method="POST">
+            <form action="/login" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="input-group">
                     <label>Username:</label>
                     <input type="text" name="username" placeholder="Username" id="username" required/>
