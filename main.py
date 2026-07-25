@@ -36,7 +36,7 @@ def login():
         users = dbHandler.getUser(username, password)
 
         if users:
-            session["username"] = username
+            session["user_id"] = users[0]
             return redirect("/index")
         else:
             return render_template("login.html", page_class="login-page", error="Invalid username or password")
@@ -59,19 +59,19 @@ def signup():
 
 @app.route("/index")
 def index():
-    username = session.get("username")
+    user_id = session.get("user_id")
 
-    grades = dbHandler.getGrades(username)
-    timetable = dbHandler.getTimetable(username)
-    goals = dbHandler.getGoals(username)
-    tasks = dbHandler.getTasks(username)
-    events = dbHandler.getEvents(username)
-    schedule = dbHandler.getSchedule(username)
+    grades = dbHandler.getGrades(user_id)
+    timetable = dbHandler.getTimetable(user_id)
+    goals = dbHandler.getGoals(user_id)
+    tasks = dbHandler.getTasks(user_id)
+    events = dbHandler.getEvents(user_id)
+    schedule = dbHandler.getSchedule(user_id)
 
     return render_template(
         "index.html",
         page_class="home-page",
-        username=username,
+        user_id=user_id,
         grades=grades,
         timetable=timetable,
         goals=goals,
