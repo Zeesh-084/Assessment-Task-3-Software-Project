@@ -202,3 +202,31 @@ button[type="titles"] {
     cursor: pointer;
     margin-bottom: 10px;
 }
+
+.grade-table-box {
+    background: #a2c8cd;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    width: 100%;
+    border: black;
+}
+
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.grade-table th {
+    background: #baf4c7;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #070707;
+}
+
+.grade-table td {
+    padding: 10px;
+    border-bottom: 1px solid #0c0b0b;
+}
