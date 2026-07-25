@@ -15,16 +15,18 @@
                         <th>S1</th>
                         <th>Term 3</th>
                         <th>Term 4</th>
+                        <th>S2</th>
                         <th>Average</th>                        
                     </tr>
                     {% for row in grades %}
                     <tr>
                         <td>{{ row.subject }}</td>
-                        <td>{{ row.term1 }}</td>
-                        <td>{{ row.term2 }}</td>
-                        <td>{{ row.s1 }}</td>
-                        <td>{{ row.term3 }}</td>
-                        <td>{{ row.term4 }}</td>                      
+                        <td>{{ row.term_1 }}</td>
+                        <td>{{ row.term_2 }}</td>
+                        <td>{{ row.semester_1 }}</td>
+                        <td>{{ row.term_3 }}</td>
+                        <td>{{ row.term_4 }}</td>
+                        <td>{{row.semester_2}}</td>                      
                         <td>{{ row.average }}</td>
                     </tr>
                     {% endfor %}

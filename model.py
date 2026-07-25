@@ -27,10 +27,11 @@ def getGrades(user_id):
     cur = con.cursor()
 
     cur.execute("""
-        SELECT subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average
+        SELECT subject, term_1, term_2, semester_1, term_3, term_4, semester_2, ROUND((term_1 + term_2 + term_3 + term_4) / 4.0,1) AS average
         FROM grades
         WHERE user_id = ?
     """, (user_id,))
+
 
     rows = cur.fetchall()
     con.close()
@@ -49,16 +50,15 @@ def getGrades(user_id):
         for row in rows
     ]
 
-
 def insertGrade(user_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
-    average = (term_1 + term_2 + term_3 + term_4) / 4
 
-    cur.execute(
-        "INSERT INTO grades (user_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average) VALUES (?,?,?,?,?,?,?,?,?)",
-        (user_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average),
-    )
+    cur.execute("""
+        INSERT INTO grades (user_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (user_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average))
+
     con.commit()
     con.close()
 
@@ -111,7 +111,7 @@ def getTasks(user_id):
     cur = con.cursor()
 
     cur.execute("""
-        SELECT task progress_task
+        SELECT task, progress_task
         FROM tasks
         WHERE user_id = ?
     """, (user_id,))
