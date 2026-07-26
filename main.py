@@ -70,18 +70,40 @@ def index():
     events = dbHandler.getEvents(user_id)
     schedule = dbHandler.getSchedule(user_id)
 
+    #timetable display
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    periods = ["BeforeSchool", "P1", "P2", "P3", "P4", "AfterSchool"]
+
+    WeekA = {day: {p: "" for p in periods} for day in  days}
+    WeekB = {day: {p: "" for p in periods} for day in  days}
+
+    for i in range(min(25, len(timetable))):
+        subject, teacher, room = timetable[i]
+        day = days[i // 5]
+        period = periods[i % 5]
+        WeekA[day][period] = f"{subject} - {room}"
+
+    for i in range(25, min(50, len(timetable))):
+        subject, teacher, room = timetable[i]
+        index = i - 25
+        day = days[index // 5]
+        period = periods[index % 5]
+        WeekB[day][period] = f"{subject} - {room}"
+
     return render_template(
         "index.html",
         page_class="home-page",
         user_id=user_id,
-        username=username,
+        username=session.get("username"),
         grades=grades,
         timetable=timetable,
         goals=goals,
         tasks=tasks,
         events=events,
+        weekA=WeekA,
+        weekB=WeekB,
         schedule=schedule
     )
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)

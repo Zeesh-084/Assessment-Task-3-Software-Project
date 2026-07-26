@@ -76,14 +76,7 @@ def getTimetable(user_id):
     rows = cur.fetchall()
     con.close()
 
-    return [
-        {
-            "subject": row[0],
-            "teacher": row[1],
-            "rooms": row[2]
-        }
-        for row in rows
-    ]
+    return rows
 
 def getGoals(user_id):
     con = sql.connect("database_files/database.db")

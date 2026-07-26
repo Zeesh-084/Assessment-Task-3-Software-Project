@@ -4,40 +4,160 @@
 <div class="home-container">
     <section class="top-section">
         <h1>Welcome Back, {{ username }}</h1>
+        <hr class="divider">
         <div class="dashboard-grid">
-            <button type="titles">Grade Table</button>
-            <div class="grade-table-box">
-                <table class="grade-table">
-                    <tr>
-                        <th>Subject</th>
-                        <th>Term 1</th>
-                        <th>Term 2</th>
-                        <th>S1</th>
-                        <th>Term 3</th>
-                        <th>Term 4</th>
-                        <th>S2</th>
-                        <th>Average</th>                        
-                    </tr>
-                    {% for row in grades %}
-                    <tr>
-                        <td>{{ row.subject }}</td>
-                        <td>{{ row.term_1 }}</td>
-                        <td>{{ row.term_2 }}</td>
-                        <td>{{ row.semester_1 }}</td>
-                        <td>{{ row.term_3 }}</td>
-                        <td>{{ row.term_4 }}</td>
-                        <td>{{row.semester_2}}</td>                      
-                        <td>{{ row.average }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+            <div class="grade-section">
+                <button type="titles">Grade Table</button>
+                <div class="grade-table-box">
+                    <table class="grade-table">
+                        <tr>
+                            <th>Subject</th>
+                            <th>Term 1</th>
+                            <th>Term 2</th>
+                            <th>S1</th>
+                            <th>Term 3</th>
+                            <th>Term 4</th>
+                            <th>S2</th>
+                            <th>Average</th>                        
+                        </tr>
+                        {% for row in grades %}
+                        <tr>
+                            <td>{{ row.subject }}</td>
+                            <td>{{ row.term_1 }}</td>
+                            <td>{{ row.term_2 }}</td>
+                            <td>{{ row.semester_1 }}</td>
+                            <td>{{ row.term_3 }}</td>
+                            <td>{{ row.term_4 }}</td>
+                            <td>{{row.semester_2}}</td>                      
+                            <td>{{ row.average }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
-            <div class="timetable">
+
+            <div class="timetable-section">
                 <button type="titles">Timetable</button>
                 <div class="timetable-grid">
-                    {% for block in timetable %}
-                        <div class="time-block {{ block.color }}">{{ block.label }}</div>
-                    {% endfor %}
+                    <h2>Week A</h2>
+                    <table class="timetable-table">
+                        <tr>
+                            <th>Period</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                        </tr>
+                        <tr>
+                            <th>Before School</th>
+                            <td>{{ weekA.Monday.BeforeSchool }}</td>
+                            <td>{{ weekA.Tuesday.BeforeSchool }}</td>
+                            <td>{{ weekA.Wednesday.BeforeSchool }}</td>
+                            <td>{{ weekA.Thursday.BeforeSchool }}</td>
+                            <td>{{ weekA.Friday.BeforeSchool }}</td>
+                        </tr>
+                        <tr>
+                            <th>P1</th>
+                            <td>{{ weekA.Monday.P1 }}</td>
+                            <td>{{ weekA.Tuesday.P1 }}</td>
+                            <td>{{ weekA.Wednesday.P1 }}</td>
+                            <td>{{ weekA.Thursday.P1 }}</td>
+                            <td>{{ weekA.Friday.P1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>P2</th>
+                            <td>{{ weekA.Monday.P2 }}</td>
+                            <td>{{ weekA.Tuesday.P2 }}</td>
+                            <td>{{ weekA.Wednesday.P2 }}</td>
+                            <td>{{ weekA.Thursday.P2 }}</td>
+                            <td>{{ weekA.Friday.P2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>P3</th>
+                            <td>{{ weekA.Monday.P3 }}</td>
+                            <td>{{ weekA.Tuesday.P3 }}</td>
+                            <td>{{ weekA.Wednesday.P3 }}</td>
+                            <td>{{ weekA.Thursday.P3 }}</td>
+                            <td>{{ weekA.Friday.P3 }}</td>
+                        </tr>
+                        <tr>
+                            <th>P4</th>
+                            <td>{{ weekA.Monday.P4 }}</td>
+                            <td>{{ weekA.Tuesday.P4 }}</td>
+                            <td>{{ weekA.Wednesday.P4 }}</td>
+                            <td>{{ weekA.Thursday.P4 }}</td>
+                            <td>{{ weekA.Friday.P4 }}</td>
+                        </tr>
+                        <tr>
+                            <th>After School</th>
+                            <td>{{ weekA.Monday.Afterschool }}</td>
+                            <td>{{ weekA.Tuesday.Afterschool }}</td>
+                            <td>{{ weekA.Wednesday.Afterschool }}</td>
+                            <td>{{ weekA.Thursday.Afterschool }}</td>
+                            <td>{{ weekA.Friday.Afterschool }}</td>
+                        </tr>
+                    </table>
+
+                    <h2>Week B</h2>
+                    <table class="timetable-table">
+                        <tr>
+                            <th>Period</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                        </tr>
+                        <tr>
+                            <th>Before School</th>
+                            <td>{{ weekB.Monday.BeforeSchool }}</td>
+                            <td>{{ weekB.Tuesday.BeforeSchool }}</td>
+                            <td>{{ weekB.Wednesday.BeforeSchool }}</td>
+                            <td>{{ weekB.Thursday.BeforeSchool }}</td>
+                            <td>{{ weekB.Friday.BeforeSchool }}</td>
+                        </tr>
+                        <tr>
+                            <th>P1</th>
+                            <td>{{ weekB.Monday.P1 }}</td>
+                            <td>{{ weekB.Tuesday.P1 }}</td>
+                            <td>{{ weekB.Wednesday.P1 }}</td>
+                            <td>{{ weekB.Thursday.P1 }}</td>
+                            <td>{{ weekB.Friday.P1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>P2</th>
+                            <td>{{ weekB.Monday.P2 }}</td>
+                            <td>{{ weekB.Tuesday.P2 }}</td>
+                            <td>{{ weekB.Wednesday.P2 }}</td>
+                            <td>{{ weekB.Thursday.P2 }}</td>
+                            <td>{{ weekB.Friday.P2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>P3</th>
+                            <td>{{ weekB.Monday.P3 }}</td>
+                            <td>{{ weekB.Tuesday.P3 }}</td>
+                            <td>{{ weekB.Wednesday.P3 }}</td>
+                            <td>{{ weekB.Thursday.P3 }}</td>
+                            <td>{{ weekB.Friday.P3 }}</td>
+                        </tr>
+                        <tr>
+                            <th>P4</th>
+                            <td>{{ weekB.Monday.P4 }}</td>
+                            <td>{{ weekB.Tuesday.P4 }}</td>
+                            <td>{{ weekB.Wednesday.P4 }}</td>
+                            <td>{{ weekB.Thursday.P4 }}</td>
+                            <td>{{ weekB.Friday.P4 }}</td>
+                        </tr>
+                        <tr>
+                            <th>After School</th>
+                            <td>{{ weekB.Monday.Afterschool }}</td>
+                            <td>{{ weekB.Tuesday.Afterschool }}</td>
+                            <td>{{ weekB.Wednesday.Afterschool }}</td>
+                            <td>{{ weekB.Thursday.Afterschool }}</td>
+                            <td>{{ weekB.Friday.Afterschool }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -89,18 +209,6 @@
                         </div>
                     {% endfor %}
                 </div>
-
-
-
     </section>
-
-
-
-
-
-
 </div>
-
-
-
 {% endblock %}

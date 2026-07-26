@@ -11,11 +11,12 @@
 
 body {
     background-color: #a2c8cd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
 }
+
 
 
 /* Half of page for login page */
@@ -191,8 +192,29 @@ button[type="button"] {
     flex-direction: column;
 }
 
-button[type="titles"] {
+.top-section {
     width: 100%;
+    padding: 40px;
+    margin-top: 180px; /* pushes content below the fixed header */
+}
+
+
+.top-section h1{
+    text-align: left;
+    margin-top: 50px;
+}
+
+.dashboard-grid {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ gap: 40px;
+ width: 100%;
+}
+
+
+button[type="titles"] {
+    width: 400px;
     padding: 12px;
     background-color: #6e699b;
     color: white;
@@ -203,13 +225,28 @@ button[type="titles"] {
     margin-bottom: 10px;
 }
 
+.divider {
+    border: none;
+    border-top: 3px solid #222;
+    margin: 20px 0 20px 0;
+    width: 100%;
+}
+
+
+.grade-section {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ align-items: flex-start; 
+}
+
 .grade-table-box {
     background: #a2c8cd;
     padding: 20px;
     border-radius: 12px;
-    margin-bottom: 30px;
-    width: 100%;
-    border: black;
+    margin-bottom: 20px;
+    width: 80%;
+    box-sizing: border-box;
 }
 
 .grade-table {
@@ -219,14 +256,56 @@ button[type="titles"] {
 }
 
 .grade-table th {
-    background: #baf4c7;
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 2px solid #070707;
+    background:#baf4c7;
+    padding:15px;
+    border:4px solid black;
+    font-size:20px;
 }
 
 .grade-table td {
-    padding: 10px;
-    border-bottom: 1px solid #0c0b0b;
+    height:65px;
+    text-align:center;
+    vertical-align:middle;
+    border:4px solid black;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.grade-table td:first-child{
+    font-weight:bold;
+    width:140px;
+}
+
+.timetable-section {
+    flex: 1;
+    width: 100%;
+}
+
+.timetable-section h2 {
+    margin: 20px 0 10px 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.timetable-table {
+    width: 80%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.timetable-table th {
+    background: #baf4c7;
+    color: black;
+    padding: 12px;
+    font-size: 18px;
+    border: 2px solid black;
+}
+
+.timetable-table td {
+    padding: 12px;
+    border: 2px solid black;
+    font-size: 18px;
+    text-align: center;
 }
