@@ -78,47 +78,48 @@ def getTimetable(user_id):
 
     return rows
 
-def getGoals(user_id):
+def addGoal(user_id, goal, progress_goal):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
-
-    cur.execute("""
-        SELECT goal, progress_goal
-        FROM goals
-        WHERE user_id = ?
-    """, (user_id,))
-
-    rows = cur.fetchall()
+    cur.execute("INSERT INTO goals (user_id, goal, progress_goal) VALUES (?, ?, ?)", (user_id, goal, progress_goal))
+    con.commit()
     con.close()
 
-    return [
-        {
-            "goal": row[0],
-            "completed": row[1]
-        }
-        for row in rows
-    ]
-
-def getTasks(user_id):
+def updateGoal(goals_id, goal, progress_goal):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
-
-    cur.execute("""
-        SELECT task, progress_task
-        FROM tasks
-        WHERE user_id = ?
-    """, (user_id,))
-
-    rows = cur.fetchall()
+    cur.execute("UPDATE goals SET goal=?, progress=? WHERE goals_id=?", (goal, progress_goal, goals_id))
+    con.commit()
     con.close()
 
-    return [
-        {
-            "task": row[0],
-            "progress_task": row[1]
-        }
-        for row in rows
-    ]
+def deleteGoal(goals_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+    cur.execute("DELETE FROM goals WHERE goals_id=?", (goals_id,))
+    con.commit()
+    con.close()
+
+
+def addTask(user_id, task, progress_task):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+    cur.execute("INSERT INTO tasks (user_id, task, progress_task) VALUES (?, ?, ?)", (user_id, task, progress_task))
+    con.commit()
+    con.close()
+
+def updateTask(task_id, task, progress_task):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+    cur.execute("UPDATE goals SET task=?, progress=? WHERE tasks_id=?", (task, progress_task, task_id))
+    con.commit()
+    con.close()
+
+def deleteGoal(task_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+    cur.execute("DELETE FROM goals WHERE tasks_id=?", (task_id,))
+    con.commit()
+    con.close()
 
 def getEvents(user_id):
     con = sql.connect("database_files/database.db")

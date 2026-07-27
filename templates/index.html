@@ -165,25 +165,37 @@
 
     <section class="top-section">
         <div class="planner-grid">
-            <div class="goals-box">
-                <h2>Goals</h2>
-                <ul>
-                    {% for goal in goals %}
-                        <li>{{ goal.text }}</li>
-                    {% endfor %}
-                </ul>
-                <button type="titles">Edit Goals</button>
-            </div>
-            <div class="tasks-box">
-                <h2>Tasks</h2>
-                <ul>
-                    {% for task in tasks %}
-                        <li>{{ task.text }}</li>
-                    {% endfor %}
-                </ul>
-                <button type="titles">Edit Tasks</button>
-            </div>
+        <div class="goals-box">
+            <h2>Goals</h2>
+        <div class="goal-list">
+        {% for goal in goals %}
+        <div class="goal">
+            <span>{{ goal.goal }}</span>
+            <span class="status {{ goal.progress|lower|replace(' ','-') }}">
+                {{ goal.progress }}
+            </span>
         </div>
+        {% endfor %}
+        <button type="titles">Edit Goals</button>
+    </div>
+            
+        </div>
+
+        <div class="tasks-box">
+            <h2>Tasks</h2>
+        <div class="task-list">
+        {% for task in tasks %}
+        <div class="task">
+            <span>{{ task.task }}</span>
+            <span class="status {{ task.progress|lower|replace(' ','-') }}">
+                {{ task.progress }}
+            </span>
+        </div>
+        {% endfor %}
+            <button type="titles">Edit Task</button>
+        </div>
+
+
         <div class="calendar-box">
                 <button type="titles">Calendar</button>
                 <div class="calendar-grid">
@@ -208,7 +220,11 @@
                             <p>{{ item.activity }}</p>
                         </div>
                     {% endfor %}
-                </div>
+                    </div>
+
     </section>
+
+    <script src="../static/js/index.js"></script>
 </div>
 {% endblock %}
+
