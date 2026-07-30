@@ -67,6 +67,8 @@ def index():
     grades = dbHandler.getGrades(user_id)
     timetable = dbHandler.getTimetable(user_id)
 
+    #goals = dbHandler.getGoals(username)
+    #tasks = dbHandler.getTasks(username)
     events = dbHandler.getEvents(user_id)
     schedule = dbHandler.getSchedule(user_id)
 
@@ -102,45 +104,6 @@ def index():
         weekB=WeekB,
         schedule=schedule
     )
-
-@app.route("/save_goal", methods=["POST"])
-def save_goal():
-    goals_id = request.form.get("goals_id")
-    goal = request.form.get("goal")
-    progress_goal = request.form.get("progress_goal")
-
-    if goals_id:
-        dbHandler.updateGoal(goals_id, goal, progress_goal)
-    else:
-        dbHandler.addGoal(session["user_id"], goal, progress_goal)
-
-    return redirect("/index")
-
-
-@app.route("/delete_goal/<int:goal_id>")
-def delete_goal(goals_id):
-    dbHandler.deleteGoal(goals_id)
-    return redirect("/index")
-
-
-@app.route("/save_task", methods=["POST"])
-def save_task():
-    tasks_id = request.form.get("tasks_id")
-    task = request.form.get("task")
-    progress_task = request.form.get("progress_task")
-
-    if tasks_id:
-        dbHandler.updateTask(tasks_id, task, progress_task)
-    else:
-        dbHandler.addTask(session["user_id"], task, progress_task)
-
-    return redirect("/index")
-
-
-@app.route("/delete_task/<int:task_id>")
-def delete_task(tasks_id):
-    dbHandler.deleteTask(tasks_id)
-    return redirect("/index")
 
 
 

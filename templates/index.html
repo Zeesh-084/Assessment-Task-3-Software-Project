@@ -167,34 +167,33 @@
         <div class="planner-grid">
         <div class="goals-box">
             <h2>Goals</h2>
-        <div class="goal-list">
-        {% for goal in goals %}
-        <div class="goal">
-            <span>{{ goal.goal }}</span>
-            <span class="status {{ goal.progress|lower|replace(' ','-') }}">
-                {{ goal.progress }}
-            </span>
-        </div>
-        {% endfor %}
-        <button type="titles">Edit Goals</button>
-    </div>
-            
+            <ul id="goals-list">
+                {% for goal in goals %}
+                <li data-id="{{ goal.id }}">
+                    <span>{{ goal.text }}</span>
+                    <span class="progress">{{ goal.progress }}</span>
+                    <button class="edit-btn" data-id="{{ goal.id }}">Edit</button>
+                    <button class="delete-btn" data-id="{{ goal.id }}">Delete</button>
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="titles">Edit Goals</button>
         </div>
 
         <div class="tasks-box">
             <h2>Tasks</h2>
-        <div class="task-list">
-        {% for task in tasks %}
-        <div class="task">
-            <span>{{ task.task }}</span>
-            <span class="status {{ task.progress|lower|replace(' ','-') }}">
-                {{ task.progress }}
-            </span>
-        </div>
-        {% endfor %}
+            <ul id="task-list">
+                {% for task in task %}
+                <li data-id="{{ task.id }}">
+                    <span>{{ task.text }}</span>
+                    <span class="progress">{{ task.progress }}</span>
+                    <button class="edit-btn" data-id="{{ task.id }}">Edit</button>
+                    <button class="delete-btn" data-id="{{ task.id }}">Delete</button>
+                </li>
+                {% endfor %}
+            </ul>
             <button type="titles">Edit Task</button>
         </div>
-
 
         <div class="calendar-box">
                 <button type="titles">Calendar</button>
@@ -224,7 +223,11 @@
 
     </section>
 
-    <script src="../static/js/index.js"></script>
 </div>
 {% endblock %}
+
+<div id="popup" class="modal">
+    <div class="modal-content">
+
+<script src="../static/js/index.js"></script>
 
