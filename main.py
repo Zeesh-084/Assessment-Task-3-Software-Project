@@ -8,24 +8,6 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "my-super-secret-key"
 csrf = CSRFProtect(app)
 
-@app.after_request
-def apply_csp(response):
-    response.headers["Content-Security-Policy"] = (
-    "default-src 'self'; "
-    "script-src 'self'; "
-    "style-src 'self' 'unsafe-inline'; "
-    "img-src 'self' data:; "
-    "connect-src 'self'; "
-    "frame-ancestors 'none'; "
-    "base-uri 'self'; "
-    "form-action 'self'; "
-    "object-src 'none'; "
-    "manifest-src 'self'; "
-    "worker-src 'self'; "
-    "navigate-to 'self'; "
-)
-    return response
-
 
 @app.route("/login", methods=["GET", "POST"])
 @app.route("/", methods=["GET", "POST"])
@@ -66,9 +48,8 @@ def index():
 
     grades = dbHandler.getGrades(user_id)
     timetable = dbHandler.getTimetable(user_id)
-
-    #goals = dbHandler.getGoals(username)
-    #tasks = dbHandler.getTasks(username)
+    goals = dbHandler.getGoals(user_id)
+    tasks = dbHandler.getTasks(user_id)
     events = dbHandler.getEvents(user_id)
     schedule = dbHandler.getSchedule(user_id)
 
@@ -98,6 +79,8 @@ def index():
         user_id=user_id,
         username=session.get("username"),
         grades=grades,
+        goals=goals,
+        tasks=tasks,
         timetable=timetable,
         events=events,
         weekA=WeekA,
@@ -105,7 +88,45 @@ def index():
         schedule=schedule
     )
 
+@app.route("/save_goal", methods=["POST"])
+def save_goal():
+    user_id = session.get("user_id")
 
+    goal_id = request.form.get("goal_id")
+    goal = request.form.get("goal")
+    progress_goal = request.form.get("progress_goal")
+
+    if goal_id:  
+        dbHandler.updateGoal(goal_id, goal, progress_goal)
+    else:        
+        dbHandler.insertGoal(user_id, goal, progress_goal)
+
+    return redirect("/index")
+
+@app.route("/delete_goal/<int:goal_id>")
+def delete_goal(goal_id):
+    dbHandler.deleteGoal(goal_id)
+    return redirect("/index")
+
+@app.route("/save_task", methods=["POST"])
+def save_task():
+    user_id = session.get("user_id")
+
+    task_id = request.form.get("task_id")
+    task = request.form.get("task")
+    progress_task = request.form.get("progress_task")
+
+    if task_id:  
+        dbHandler.updateTask(task_id, task, progress_task)
+    else:        
+        dbHandler.insertTask(user_id, task, progress_task)
+
+    return redirect("/index")
+
+@app.route("/delete_task/<int:task_id>")
+def delete_task(task_id):
+    dbHandler.deleteTask(task_id)
+    return redirect("/index")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

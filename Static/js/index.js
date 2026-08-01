@@ -1,33 +1,34 @@
-const modal = document.getElementById("goalModal");
-
-document.getElementById("editGoals").onclick = () => {
-
-    modal.style.display = "flex";
-
+function openGoalsPopup(){
+    document.getElementById("goalsPopup").style.display = "flex";
 }
 
-window.onclick = function(e){
+function closeGoalsPopup(){
+    document.getElementById("goalsPopup").style.display = "none";
+}
 
-    if(e.target===modal){
+function openTasksPopup(){
+    document.getElementById("tasksPopup").style.display = "flex";
+}
 
-        modal.style.display="none";
+function closeTasksPopup(){
+    document.getElementById("tasksPopup").style.display = "none";
+}
 
+window.onclick = function(event){
+
+    let goalsPopup =
+        document.getElementById("goalsPopup");
+
+    let tasksPopup =
+        document.getElementById("tasksPopup");
+
+    if(event.target === goalsPopup){
+        closeGoalsPopup();
     }
 
+    if(event.target === tasksPopup){
+        closeTasksPopup();
+    }
 }
-function addGoal(){
-    let container=document.getElementById("goalContainer");
-    let row=document.createElement("div");
-    row.className="goal-row";
-    row.innerHTML=`
-        <input type="text" name="goal[]">
-        <select name="progress[]">
-            <option>Not Started</option>
-            <option>In Progress</option>
-            <option>Finished</option>
-        </select>
-        <button>Delete</button>
-    `;
-    container.appendChild(row);
 
-}
+
