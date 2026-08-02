@@ -225,22 +225,51 @@
     <div class="popup-box">
         <h1>Goals</h1>
         <p>View all your goals, add, edit and remove goals.</p>
-        <ul>
+        <ul class="popup-scroll">
             {% for goal in goals %}
-            <li class="popup-item">
+            <li class="popup-item" data-id="{{ goal.id }}">
                 <span>{{ goal.goal }}</span>
-                <select>
+                <select  onchange="updateGoalProgress('{{ goal.id }}', this.value)">
                     <option value="Not Started" {% if goal.progress_goal == 'Not Started' %}selected{% endif %}>Not Started</option>
                     <option value="In Progress" {% if goal.progress_goal == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if goal.progress_goal == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
-                <button>Edit</button>
-                <button>Delete</button>
+                <button onclick="editGoal('{{ goal.id }}', '{{ goal.goal }}', '{{ goal.progress_goal }}')">Edit</button>
+                <button onclick="deleteGoal('{{ goal.id }}')">Delete</button>
             </li>
             {% endfor %}
         </ul>
-        <button>Add Goal</button>
+        <button onclick="openAddGoal()">Add Goal</button>
         <button onclick="closeGoalsPopup()">Close</button>
+
+        <div id="goalEditBox" class="edit-box">
+            <h2>Edit Goal</h2>
+            <input type="hidden" id="goalEditId">
+            <label>Goal:</label>
+            <input type="text" id="goalEditInput" >
+            <label>Progress:</label>
+            <select id="goalEditProgress">
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+            <button onclick="saveGoalEdit()">Save</button>
+            <button onclick="cancelGoalEdit()">Cancel</button>
+        </div>
+
+        <div id="goalAddBox" class="edit-box">
+            <h2>Add Goal</h2>
+            <label>Goal:</label>
+            <input type="text" id="goalAddInput">
+            <label>Progress:</label>
+            <select id="goalAddProgress">
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+            <button onclick="saveGoalAdd()">Save</button>
+            <button onclick="cancelGoalAdd()">Cancel</button>
+        </div>
     </div>
 </div>
 
@@ -248,24 +277,63 @@
     <div class="popup-box">
         <h1>Tasks</h1>
         <p>View all your tasks, add, edit and remove tasks.</p>
-        <ul>
+        <ul class="popup-scroll">
             {% for task in tasks %}
-            <li class="popup-item">
+            <li class="popup-item" data-id="{{ task.id }}">
                 <span>{{ task.task }}</span>
-                <select>
+                <select  onchange="updateTaskProgress('{{ task.id }}', this.value)">
                     <option value="Not Started" {% if task.progress_task == 'Not Started' %}selected{% endif %}>Not Started</option>
                     <option value="In Progress" {% if task.progress_task == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if task.progress_task == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
-                <button>Edit</button>
-                <button>Delete</button>
+                <button onclick="editTask('{{ task.id }}', '{{ task.task }}', '{{ task.progress_task }}')">Edit</button>
+                <button onclick="deleteTask('{{ task.id }}')">Delete</button>
             </li>
             {% endfor %}
         </ul>
-        <button>Add Task</button>
+        <button onclick="openAddTask()">Add Task</button>
         <button onclick="closeTasksPopup()">Close</button>
+
+        <div id="taskEditBox" class="edit-box">
+            <h2>Edit Task</h2>
+            <input type="hidden" id="taskEditId">
+            <label>Task:</label>
+            <input type="text" id="taskEditInput" >
+            <label>Progress:</label>
+            <select id="taskEditProgress">
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+            <button onclick="saveTaskEdit()">Save</button>
+            <button onclick="cancelTaskEdit()">Cancel</button>
+        </div>
+
+        <div id="taskAddBox" class="edit-box">
+            <h2>Add Task</h2>
+            <label>Task:</label>
+            <input type="text" id="taskAddInput">
+            <label>Progress:</label>
+            <select id="taskAddProgress">
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+            <button onclick="saveTaskAdd()">Save</button>
+            <button onclick="cancelTaskAdd()">Cancel</button>
+        </div>
     </div>
 </div>
+
+<div id="deleteConfirm" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete this item?</p>
+        <button id="confirmDeleteBtn">Yes, Delete</button>
+        <button onclick="closeDeleteConfirm()">Cancel</button>
+    </div>
+</div>
+
 <script src="../static/js/index.js"></script>
 
 {% endblock %}
