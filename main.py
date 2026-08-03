@@ -108,7 +108,7 @@ def delete_goal(goal_id):
     dbHandler.deleteGoal(goal_id)
     return redirect("/index")
 
-@app.route("/save_task", methods=["POST"])
+@app.route("/delete_goal/<int:goal_id>")
 def save_task():
     user_id = session.get("user_id")
 

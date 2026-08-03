@@ -388,3 +388,25 @@ button[type="titles"] {
     margin-top: 15px;
     display: none;  
 }
+
+.edit-box input,
+.edit-box select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #6e5bb5;
+    background: #fdfdff;
+    margin-bottom: 10px;
+}
+
+.popup-item select {
+    padding: 6px;
+    border-radius: 6px;
+    border: 2px solid #6e5bb5;
+    background: #fdfdff;
+}
+
+.edit-icon {
+    width: 25px;
+    height: 25px;
+}

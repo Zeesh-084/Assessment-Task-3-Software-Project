@@ -216,7 +216,6 @@
                         </div>
                     {% endfor %}
                     </div>
-
     </section>
 
 </div>
@@ -234,41 +233,44 @@
                     <option value="In Progress" {% if goal.progress_goal == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if goal.progress_goal == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
-                <button onclick="editGoal('{{ goal.id }}', '{{ goal.goal }}', '{{ goal.progress_goal }}')">Edit</button>
-                <button onclick="deleteGoal('{{ goal.id }}')">Delete</button>
+                <button onclick="editGoal('{{ goal.id }}', '{{ goal.goal }}', '{{ goal.progress_goal }}')">
+                    <img src="../static/images/Edit.png" alt="Edit Icon" class="edit-icon">
+                </button>
+                <button onclick="confirmDeleteGoal('{{ goal.id }}')">Delete</button>
             </li>
             {% endfor %}
         </ul>
         <button onclick="openAddGoal()">Add Goal</button>
         <button onclick="closeGoalsPopup()">Close</button>
 
+
+        <div id="goalAddBox" class="edit-box">
+            <h2>Add Goal</h2>
+            <label>Goal:</label>
+            <input type="text" id="add_goal_goal">
+            <label>Progress:</label>
+            <select id="add_goal_progress_goal">
+                <option>Not Started</option>
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+            <button onclick="saveNewGoal()">Save</button>
+            <button onclick="closeAddGoal()">Cancel</button>
+        </div>
+
         <div id="goalEditBox" class="edit-box">
             <h2>Edit Goal</h2>
-            <input type="hidden" id="goalEditId">
+            <input type="hidden" id="edit_goal_id">
             <label>Goal:</label>
-            <input type="text" id="goalEditInput" >
+            <input type="text" id="edit_goal_goal" >
             <label>Progress:</label>
-            <select id="goalEditProgress">
+            <select id="edit_goal_progress_goal">
                 <option>Not Started</option>
                 <option>In Progress</option>
                 <option>Completed</option>
             </select>
             <button onclick="saveGoalEdit()">Save</button>
-            <button onclick="cancelGoalEdit()">Cancel</button>
-        </div>
-
-        <div id="goalAddBox" class="edit-box">
-            <h2>Add Goal</h2>
-            <label>Goal:</label>
-            <input type="text" id="goalAddInput">
-            <label>Progress:</label>
-            <select id="goalAddProgress">
-                <option>Not Started</option>
-                <option>In Progress</option>
-                <option>Completed</option>
-            </select>
-            <button onclick="saveGoalAdd()">Save</button>
-            <button onclick="cancelGoalAdd()">Cancel</button>
+            <button onclick="closeGoalEdit()">Cancel</button>
         </div>
     </div>
 </div>
@@ -287,7 +289,7 @@
                     <option value="Completed" {% if task.progress_task == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
                 <button onclick="editTask('{{ task.id }}', '{{ task.task }}', '{{ task.progress_task }}')">Edit</button>
-                <button onclick="deleteTask('{{ task.id }}')">Delete</button>
+                <button onclick="confirmDeleteTask('{{ task.id }}')">Delete</button>
             </li>
             {% endfor %}
         </ul>
@@ -296,31 +298,31 @@
 
         <div id="taskEditBox" class="edit-box">
             <h2>Edit Task</h2>
-            <input type="hidden" id="taskEditId">
+            <input type="hidden" id="edit_task_id">
             <label>Task:</label>
-            <input type="text" id="taskEditInput" >
+            <input type="text" id="edit_task_task" >
             <label>Progress:</label>
-            <select id="taskEditProgress">
+            <select id="edit_task_progress_task">
                 <option>Not Started</option>
                 <option>In Progress</option>
                 <option>Completed</option>
             </select>
             <button onclick="saveTaskEdit()">Save</button>
-            <button onclick="cancelTaskEdit()">Cancel</button>
+            <button onclick="closeTaskEdit()">Cancel</button>
         </div>
 
         <div id="taskAddBox" class="edit-box">
             <h2>Add Task</h2>
             <label>Task:</label>
-            <input type="text" id="taskAddInput">
+            <input type="text" id="add_task_task">
             <label>Progress:</label>
-            <select id="taskAddProgress">
+            <select id="add_task_progress_task">
                 <option>Not Started</option>
                 <option>In Progress</option>
                 <option>Completed</option>
             </select>
-            <button onclick="saveTaskAdd()">Save</button>
-            <button onclick="cancelTaskAdd()">Cancel</button>
+            <button onclick="saveNewTask()">Save</button>
+            <button onclick="closeAddTask()">Cancel</button>
         </div>
     </div>
 </div>

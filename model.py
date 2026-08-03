@@ -80,6 +80,7 @@ def getTimetable(user_id):
 
 def getGoals(user_id):
     con = sql.connect("database_files/database.db")
+    con.row_factory = sql.Row
     cur = con.cursor()
 
     cur.execute("SELECT * FROM goals WHERE user_id=?", (user_id,))
@@ -125,6 +126,7 @@ def deleteGoal(goal_id):
 
 def getTasks(user_id):
     con = sql.connect("database_files/database.db")
+    con.row_factory = sql.Row
     cur = con.cursor()
 
     cur.execute("SELECT * FROM tasks WHERE user_id=?", (user_id,))
