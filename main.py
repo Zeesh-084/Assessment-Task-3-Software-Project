@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, session
 from flask_wtf.csrf import CSRFProtect
 import model as dbHandler
+import jinja2
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "my-super-secret-key"
@@ -90,45 +91,39 @@ def index():
 
 @app.route("/save_goal", methods=["POST"])
 def save_goal():
+
     user_id = session.get("user_id")
 
     goals_id = request.form.get("goals_id")
     goal = request.form.get("goal")
     progress_goal = request.form.get("progress_goal")
 
+
     if goals_id:
-        dbHandler.updateGoal(goals_id, goal, progress_goal)
-    else:
+
+        if goal is not None and progress_goal is not None:
+            dbHandler.updateGoal( goals_id, goal, progress_goal)
+
+        elif progress_goal is not None:
+            dbHandler.updateGoalProgress(user_id, goals_id, progress_goal)
+        return "updated"
+    
+    if goal:
         dbHandler.insertGoal(user_id, goal, progress_goal)
+        return "created"
 
-    return "OK"
+
+    return "Invalid request", 400
 
 
-@app.route("/delete_goal/<int:goals_id>")
+@app.route("/delete_goal/<int:goals_id>", methods=["POST"])
 def delete_goal(goals_id):
-    dbHandler.deleteGoal(goals_id)
-    return "OK"
-
-
-@app.route("/delete_goal/<int:goal_id>")
-def save_task():
     user_id = session.get("user_id")
-
-    task_id = request.form.get("task_id")
-    task = request.form.get("task")
-    progress_task = request.form.get("progress_task")
-
-    if task_id:  
-        dbHandler.updateTask(task_id, task, progress_task)
-    else:        
-        dbHandler.insertTask(user_id, task, progress_task)
-
-    return redirect("/index")
-
-@app.route("/delete_task/<int:task_id>")
-def delete_task(task_id):
-    dbHandler.deleteTask(task_id)
-    return redirect("/index")
+    dbHandler.deleteGoal(
+        user_id,
+        goals_id
+    )
+    return "OK"
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

@@ -83,7 +83,9 @@ def getGoals(user_id):
     con.row_factory = sql.Row
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM goals WHERE user_id=?", (user_id,))
+    cur.execute(
+        "SELECT * FROM goals WHERE user_id=?", (user_id,)
+    )
     rows = cur.fetchall()
 
     con.close()
@@ -99,25 +101,69 @@ def insertGoal(user_id, goal, progress_goal):
     )
 
     con.commit()
+    new_id = cur.lastrowid
     con.close()
+    return new_id
 
-def updateGoal(goals_id, goal, progress_goal):
+def updateGoal(user_id, goals_id, goal, progress_goal):
+
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
     cur.execute(
-        "UPDATE goals SET goal=?, progress_goal=? WHERE goals_id=?", 
-        (goal, progress_goal, goals_id)
+        """
+        UPDATE goals
+        SET goal=?, progress_goal=?
+        WHERE goals_id=? AND user_id=?
+        """,
+        (
+            goal,
+            progress_goal,
+            goals_id,
+            user_id
+        )
+    )
+    con.commit()
+    con.close()
+
+def updateGoalProgress(user_id, goals_id, progress_goal):
+
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute(
+        """
+        UPDATE goals
+        SET progress_goal=?
+        WHERE goals_id=? AND user_id=?
+        """,
+        (
+            progress_goal,
+            goals_id,
+            user_id
+        )
     )
 
     con.commit()
     con.close()
 
-def deleteGoal(goals_id):
+
+
+def deleteGoal(user_id, goals_id):
+
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
-    cur.execute("DELETE FROM goals WHERE goals_id=?", (goals_id,))
+    cur.execute(
+        """
+        DELETE FROM goals
+        WHERE goals_id=? AND user_id=?
+        """,
+        (
+            goals_id,
+            user_id
+        )
+    )
 
     con.commit()
     con.close()
