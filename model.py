@@ -101,23 +101,23 @@ def insertGoal(user_id, goal, progress_goal):
     con.commit()
     con.close()
 
-def updateGoal(goal_id, goal, progress_goal):
+def updateGoal(goals_id, goal, progress_goal):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
     cur.execute(
-        "UPDATE goals SET goal=?, progress_goal=? WHERE id=?", 
-        (goal, progress_goal, goal_id)
+        "UPDATE goals SET goal=?, progress_goal=? WHERE goals_id=?", 
+        (goal, progress_goal, goals_id)
     )
 
     con.commit()
     con.close()
 
-def deleteGoal(goal_id):
+def deleteGoal(goals_id):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
-    cur.execute("DELETE FROM goals WHERE id=?", (goal_id,))
+    cur.execute("DELETE FROM goals WHERE goals_id=?", (goals_id,))
 
     con.commit()
     con.close()

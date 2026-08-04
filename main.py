@@ -92,21 +92,23 @@ def index():
 def save_goal():
     user_id = session.get("user_id")
 
-    goal_id = request.form.get("goal_id")
+    goals_id = request.form.get("goals_id")
     goal = request.form.get("goal")
     progress_goal = request.form.get("progress_goal")
 
-    if goal_id:  
-        dbHandler.updateGoal(goal_id, goal, progress_goal)
-    else:        
+    if goals_id:
+        dbHandler.updateGoal(goals_id, goal, progress_goal)
+    else:
         dbHandler.insertGoal(user_id, goal, progress_goal)
 
-    return redirect("/index")
+    return "OK"
 
-@app.route("/delete_goal/<int:goal_id>")
-def delete_goal(goal_id):
-    dbHandler.deleteGoal(goal_id)
-    return redirect("/index")
+
+@app.route("/delete_goal/<int:goals_id>")
+def delete_goal(goals_id):
+    dbHandler.deleteGoal(goals_id)
+    return "OK"
+
 
 @app.route("/delete_goal/<int:goal_id>")
 def save_task():

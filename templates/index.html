@@ -166,17 +166,21 @@
     <section class="top-section">
         <div class="planner-grid">
         <div class="goals-box">
-            <h2>Goals</h2>
-            <ul id="goals-list">
-                {% for goal in goals %}
-                <li data-id="{{ goal.id }}">
-                    <span>{{ goal.goal }}</span>
-                    <span class="progress">{{ goal.progress_goal }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-            <button type="titles" onclick="openGoalsPopup()">Edit Goals</button>
+        <h2>Goals</h2>
+
+        <ul id="goals-list">
+            {% for goal in goals %}
+            <li data-id="{{ goal.goals_id }}">
+                <span class="goal-text">{{ goal.goal }}</span>
+                <span class="progress">{{ goal.progress_goal }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <button type= "titles" onclick="openGoalsPopup()">Edit Goals</button>
         </div>
+
+
 
         <div class="tasks-box">
             <h2>Tasks</h2>
@@ -222,34 +226,32 @@
 
 <div id="goalsPopup" class="popup-overlay">
     <div class="popup-box">
+
         <h1>Goals</h1>
         <p>View all your goals, add, edit and remove goals.</p>
-        <ul class="popup-scroll">
+        <ul id="goals-popup-list" class="popup-scroll">
             {% for goal in goals %}
-            <li class="popup-item" data-id="{{ goal.id }}">
-                <span>{{ goal.goal }}</span>
-                <select  onchange="updateGoalProgress('{{ goal.id }}', this.value)">
+            <li class="popup-item" data-id="{{ goal.goals_id }}">
+                <span class="goal-text">{{ goal.goal }}</span>
+                <select onchange="updateGoalProgress('{{ goal.goals_id }}', this.value)">
                     <option value="Not Started" {% if goal.progress_goal == 'Not Started' %}selected{% endif %}>Not Started</option>
                     <option value="In Progress" {% if goal.progress_goal == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if goal.progress_goal == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
-                <button onclick="editGoal('{{ goal.id }}', '{{ goal.goal }}', '{{ goal.progress_goal }}')">
-                    <img src="../static/images/Edit.png" alt="Edit Icon" class="edit-icon">
-                </button>
-                <button onclick="confirmDeleteGoal('{{ goal.id }}')">Delete</button>
+                <button onclick="editGoal('{{ goal.goals_id }}', '{{ goal.goal }}', '{{ goal.progress_goal }}')">Edit</button>
+                <button onclick="confirmDeleteGoal('{{ goal.goals_id }}')">Delete</button>
             </li>
             {% endfor %}
         </ul>
         <button onclick="openAddGoal()">Add Goal</button>
         <button onclick="closeGoalsPopup()">Close</button>
 
-
         <div id="goalAddBox" class="edit-box">
             <h2>Add Goal</h2>
             <label>Goal:</label>
-            <input type="text" id="add_goal_goal">
+            <input type="text" id="add_goal_text">
             <label>Progress:</label>
-            <select id="add_goal_progress_goal">
+            <select id="add_goal_progress">
                 <option>Not Started</option>
                 <option>In Progress</option>
                 <option>Completed</option>
@@ -258,13 +260,15 @@
             <button onclick="closeAddGoal()">Cancel</button>
         </div>
 
-        <div id="goalEditBox" class="edit-box">
+
+
+         <div id="goalEditBox" class="edit-box">
             <h2>Edit Goal</h2>
             <input type="hidden" id="edit_goal_id">
             <label>Goal:</label>
-            <input type="text" id="edit_goal_goal" >
+            <input type="text" id="edit_goal_text">
             <label>Progress:</label>
-            <select id="edit_goal_progress_goal">
+            <select id="edit_goal_progress">
                 <option>Not Started</option>
                 <option>In Progress</option>
                 <option>Completed</option>
@@ -272,8 +276,22 @@
             <button onclick="saveGoalEdit()">Save</button>
             <button onclick="closeGoalEdit()">Cancel</button>
         </div>
+
     </div>
 </div>
+
+
+<div id="deleteConfirm" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Are you sure?</h2>
+        <p>This action cannot be undone.</p>
+
+        <button id="deleteYes">Delete</button>
+        <button onclick="closeDeleteConfirm()">Cancel</button>
+    </div>
+</div>
+
+
 
 <div id="tasksPopup" class="popup-overlay">
     <div class="popup-box">
