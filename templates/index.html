@@ -233,13 +233,16 @@
             {% for goal in goals %}
             <li class="popup-item" data-id="{{ goal.goals_id }}">
                 <span class="goal-text">{{ goal.goal }}</span>
-                <select onchange="updateGoalProgress('{{ goal.goals_id }}', this.value)">
+                <select onchange='updateGoalProgress({{ goal.goals_id }}, this.value)'>
                     <option value="Not Started" {% if goal.progress_goal == 'Not Started' %}selected{% endif %}>Not Started</option>
                     <option value="In Progress" {% if goal.progress_goal == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if goal.progress_goal == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
-                <button onclick="editGoal('{{ goal.goals_id }}', '{{ goal.goal|tojson }}', '{{ goal.progress_goal|tojson }}')">Edit</button>
-                <button onclick="confirmDeleteGoal('{{ goal.goals_id }}')">Delete</button>
+                <button onclick='editGoal({{ goal.goals_id }}, {{ goal.goal|tojson }}, {{ goal.progress_goal|tojson }})'> 
+                    Edit
+                </button>
+
+                <button onclick='confirmDeleteGoal({{ goal.goals_id }})'>Delete</button>
             </li>
             {% endfor %}
         </ul>

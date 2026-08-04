@@ -78,13 +78,14 @@ function saveNewGoal() {
 // ==========================================
 // EDIT GOAL
 // ==========================================
-function editGoal(id, goal, progress) {
-
-    document.getElementById("edit_goal_id").value = id;
+function editGoal(goals_id, goal, progress) {
+    document.getElementById("edit_goal_id").value = goals_id;
     document.getElementById("edit_goal_text").value = goal;
     document.getElementById("edit_goal_progress").value = progress;
+
     document.getElementById("goalEditBox").style.display = "block";
 }
+
 
 function closeGoalEdit(){
     document.getElementById("goalEditBox").style.display="none";
