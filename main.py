@@ -150,5 +150,17 @@ def delete_task(tasks_id):
     )
     return "OK"
 
+@app.route("/grade_table", methods=["GET"])
+def grade_table():
+    user_id = session.get("user_id")
+    grades = dbHandler.getGrades(user_id)
+    return render_template("grade_table.html", grades=grades)
+
+@app.route("/timetable", methods=["GET"])
+def timetable():
+    user_id = session.get("user_id")
+    timetable = dbHandler.getTimetable(user_id)
+    return render_template("timetable.html", timetable=timetable)
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

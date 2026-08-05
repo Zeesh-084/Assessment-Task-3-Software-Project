@@ -206,7 +206,7 @@ button[type="button"] {
 .top-section {
     width: 100%;
     padding: 40px;
-    margin-top: 180px; /* pushes content below the fixed header */
+    margin-top: 180px; 
 }
 
 
@@ -262,6 +262,7 @@ button[type="titles"] {
 
 .grade-table {
     width: 100%;
+    margin: 0 auto; 
     border-collapse: collapse;
     font-size: 16px;
 }
@@ -571,5 +572,55 @@ button[type="titles"] {
     margin-top: 20px;
 }
 
+
+/* grade_table.html */
+.grade_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;       
+    width: 100%;
+    margin-top: 20px;
+    margin: auto;
+    padding: 200px 0;
+}
+
+.grade-table-page {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 40px 0;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    padding: 50px;
+}
+
+.controls button {
+    background: #8e44ad;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.controls button:hover {
+    background: #732d91;
+}
+
+.grade-table{
+    width: 80%;
+    font-size: 16px;
+}
+
+.grade-table th,
+.grade-table td {
+    border: 3px solid black;
+    padding: 10px;
+    text-align: center;
+}
 
 
