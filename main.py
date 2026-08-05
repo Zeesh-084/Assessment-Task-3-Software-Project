@@ -100,14 +100,11 @@ def save_goal():
 
 
     if goals_id:
-
         if goal is not None and progress_goal is not None:
-            dbHandler.updateGoal( goals_id, goal, progress_goal)
-
+            dbHandler.updateGoal( user_id, goals_id, goal, progress_goal)
         elif progress_goal is not None:
             dbHandler.updateGoalProgress(user_id, goals_id, progress_goal)
         return "updated"
-    
     if goal:
         dbHandler.insertGoal(user_id, goal, progress_goal)
         return "created"
