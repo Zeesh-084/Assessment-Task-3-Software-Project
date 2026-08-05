@@ -165,9 +165,9 @@
 
     <section class="top-section">
         <div class="planner-grid">
-        <div class="goals-box">
+            
+    <div class="goals-box">
         <h2>Goals</h2>
-
         <ul id="goals-list">
             {% for goal in goals %}
             <li data-id="{{ goal.goals_id }}">
@@ -178,7 +178,7 @@
         </ul>
 
         <button type= "titles" onclick="openGoalsPopup()">Edit Goals</button>
-        </div>
+    </div>
 
 
 
@@ -224,7 +224,7 @@
 
 </div>
 
-<div id="goalsPopup" class="popup-overlay">
+<div id="goalsPopup" class="popup-overlay" style="display:none;">
     <div class="popup-box">
 
         <h1>Goals</h1>
@@ -233,45 +233,46 @@
             {% for goal in goals %}
             <li class="popup-item" data-id="{{ goal.goals_id }}">
                 <span class="goal-text">{{ goal.goal }}</span>
-                <select onchange="updateGoalProgress('{{ goal.goals_id }}', this.value)">
+                <select onchange='updateGoalProgress({{ goal.goals_id }}, this.value)'>
                     <option value="Not Started" {% if goal.progress_goal == 'Not Started' %}selected{% endif %}>Not Started</option>
                     <option value="In Progress" {% if goal.progress_goal == 'In Progress' %}selected{% endif %}>In Progress</option>
                     <option value="Completed" {% if goal.progress_goal == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
-                <button onclick="editGoal('{{ goal.goals_id }}', '{{ goal.goal }}', '{{ goal.progress_goal }}')">Edit</button>
-                <button onclick="confirmDeleteGoal('{{ goal.goals_id }}')">Delete</button>
+                <button onclick='editGoal({{ goal.goals_id }}, {{ goal.goal|tojson }}, {{ goal.progress_goal|tojson }})'> 
+                    Edit
+                </button>
+
+                <button onclick='confirmDeleteGoal({{ goal.goals_id }})'>Delete</button>
             </li>
             {% endfor %}
         </ul>
         <button onclick="openAddGoal()">Add Goal</button>
         <button onclick="closeGoalsPopup()">Close</button>
 
-        <div id="goalAddBox" class="edit-box">
+        <div id="goalAddBox" class="edit-box" style="display:none;">
             <h2>Add Goal</h2>
             <label>Goal:</label>
             <input type="text" id="add_goal_text">
             <label>Progress:</label>
             <select id="add_goal_progress">
-                <option>Not Started</option>
-                <option>In Progress</option>
-                <option>Completed</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
             </select>
             <button onclick="saveNewGoal()">Save</button>
             <button onclick="closeAddGoal()">Cancel</button>
         </div>
 
-
-
-         <div id="goalEditBox" class="edit-box">
+         <div id="goalEditBox" class="edit-box" style="display:none;">
             <h2>Edit Goal</h2>
             <input type="hidden" id="edit_goal_id">
             <label>Goal:</label>
             <input type="text" id="edit_goal_text">
             <label>Progress:</label>
             <select id="edit_goal_progress">
-                <option>Not Started</option>
-                <option>In Progress</option>
-                <option>Completed</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
             </select>
             <button onclick="saveGoalEdit()">Save</button>
             <button onclick="closeGoalEdit()">Cancel</button>
@@ -293,7 +294,7 @@
 
 
 
-<div id="tasksPopup" class="popup-overlay">
+<div id="tasksPopup" class="popup-overlay" style="display:none;">
     <div class="popup-box">
         <h1>Tasks</h1>
         <p>View all your tasks, add, edit and remove tasks.</p>
@@ -314,7 +315,7 @@
         <button onclick="openAddTask()">Add Task</button>
         <button onclick="closeTasksPopup()">Close</button>
 
-        <div id="taskEditBox" class="edit-box">
+        <div id="taskEditBox" class="edit-box" style="display:none;">
             <h2>Edit Task</h2>
             <input type="hidden" id="edit_task_id">
             <label>Task:</label>
@@ -329,7 +330,7 @@
             <button onclick="closeTaskEdit()">Cancel</button>
         </div>
 
-        <div id="taskAddBox" class="edit-box">
+        <div id="taskAddBox" class="edit-box" style="display:none;">
             <h2>Add Task</h2>
             <label>Task:</label>
             <input type="text" id="add_task_task">
@@ -345,7 +346,7 @@
     </div>
 </div>
 
-<div id="deleteConfirm" class="popup-overlay">
+<div id="deleteConfirm" class="popup-overlay" style="display:none;">
     <div class="popup-box">
         <h2>Confirm Deletion</h2>
         <p>Are you sure you want to delete this item?</p>
