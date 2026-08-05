@@ -62,3 +62,5 @@
     -- user_id INTEGER NOT NULL,
     -- profile_picture BLOB NULL,
     -- activate_2fa INTEGER NULL);
+
+

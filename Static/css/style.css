@@ -17,8 +17,6 @@ body {
     min-height: 100vh;
 }
 
-
-
 /* Half of page for login page */
 .login-page {
     display: flex;
@@ -340,22 +338,54 @@ button[type="titles"] {
 
 .popup-box {
     background: #92c9a9;
-    width: 500px;
-    max-height: 100vh;
+    width: 480px;
+    max-height: 85vh;
     overflow-y: auto;
     padding: 25px;
-    border-radius: 14px;
+    border-radius: 18px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     animation: popupFade 0.25s ease-out;
 }
 
+@keyframes popupFade {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.popup-box h1 {
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+}
+
+.popup-box p {
+    color: #444;
+    margin-bottom: 15px;
+}
+
+#goals-popup-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
 .popup-item {
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.popup-item .goal-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
 }
 
 .popup-box button {
@@ -371,32 +401,76 @@ button[type="titles"] {
     transition: background 0.2s;
 }
 
+.popup-item select {
+    padding: 6px 10px;
+    border-radius: 20px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    background: #eee;
+}
+
+.popup-item select option[value="Not Started"] {
+    background: #ff5757; /* red */
+    color: white;
+}
+
+.popup-item select option[value="In Progress"] {
+    background: #7ab1b8; /* blue */
+    color: white;
+}
+
+.popup-item select option[value="Completed"] {
+    background: #baf4c7; /* green */
+    color: white;
+}
+
 .popup-box button:hover {
     background: #594a9b;
 }
 
 .popup-item button {
     background: #6e699b;
-    padding: 6px 10px;
-    margin-left: 8px;
-    border-radius: 6px;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.popup-item button:hover {
+    background: #732d91;
 }
 
 .edit-box {
-    padding: 15px;
-    border-radius: 10px;
+    padding: 18px;
+    border-radius: 14px;
     margin-top: 15px;
-    display: none;  
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.edit-box h2 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.edit-box label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
 }
 
 .edit-box input,
 .edit-box select {
     width: 100%;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 2px solid #6e5bb5;
     background: #fdfdff;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .popup-item select {
@@ -410,3 +484,92 @@ button[type="titles"] {
     width: 25px;
     height: 25px;
 }
+
+.goals-box {
+    background: #92c9a9;
+    padding: 20px;
+    border-radius: 14px;
+    width: 450px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.goals-box h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#goals-list {
+    list-style: decimal;
+    padding: 5px 20px;
+    margin: 0 0 15px 0;
+    color: #010101;
+}
+
+.goal-text {
+    font-weight: 600;
+    color: #000;
+}
+
+.progress {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgb(0, 0, 0);
+}
+
+.progress:contains("Not Started"),
+.progress[data-status="Not Started"] {
+    background: #e74c3c; 
+}
+
+.progress:contains("In Progress"),
+.progress[data-status="In Progress"] {
+    background: #3498db; 
+}
+
+.progress:contains("Completed"),
+.progress[data-status="Completed"] {
+    background: #2ecc71; 
+}
+
+.tasks-box {
+    background: #92c9a9;
+    padding: 20px;
+    border-radius: 14px;
+    width: 450px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.tasks-box h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#tasks-list {
+    list-style: decimal;
+    padding: 5px 20px;
+    margin: 0 0 15px 0;
+    color: #010101;
+}
+
+.task-text {
+    font-weight: 600;
+    color: #000;
+}
+
+.goals-tasks-container {
+    display: flex;
+    gap: 20px;              
+    align-items: flex-start; 
+    margin-top: 20px;
+}
+
+
+

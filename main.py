@@ -109,9 +109,7 @@ def save_goal():
         dbHandler.insertGoal(user_id, goal, progress_goal)
         return "created"
 
-
     return "Invalid request", 400
-
 
 @app.route("/delete_goal/<int:goals_id>", methods=["POST"])
 def delete_goal(goals_id):
@@ -119,6 +117,36 @@ def delete_goal(goals_id):
     dbHandler.deleteGoal(
         user_id,
         goals_id
+    )
+    return "OK"
+
+@app.route("/save_task", methods=["POST"])
+def save_task():
+
+    user_id = session.get("user_id")
+
+    tasks_id = request.form.get("tasks_id")
+    task = request.form.get("task")
+    progress_task = request.form.get("progress_task")
+
+    if tasks_id:
+        if task is not None and progress_task is not None:
+            dbHandler.updateTask(user_id, tasks_id, task, progress_task)
+        elif progress_task is not None:
+            dbHandler.updateTaskProgress(user_id, tasks_id, progress_task)
+        return "updated"
+    if task:
+        dbHandler.insertTask(user_id, task, progress_task)
+        return "created"
+
+    return "Invalid request", 400
+
+@app.route("/delete_task/<int:tasks_id>", methods=["POST"])
+def delete_task(tasks_id):
+    user_id = session.get("user_id")
+    dbHandler.deleteTask(
+        user_id,
+        tasks_id
     )
     return "OK"
 

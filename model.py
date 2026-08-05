@@ -175,44 +175,94 @@ def getTasks(user_id):
     con.row_factory = sql.Row
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM tasks WHERE user_id=?", (user_id,))
+    cur.execute(
+        "SELECT * FROM tasks WHERE user_id=?", (user_id,)
+    )
     rows = cur.fetchall()
 
     con.close()
     return rows
+
 
 def insertTask(user_id, task, progress_task):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
     cur.execute(
-        "INSERT INTO tasks (user_id, task, progress_task) VALUES (?, ?, ?)", 
+        """
+        INSERT INTO tasks (user_id, task, progress_task)
+        VALUES (?, ?, ?)
+        """,
         (user_id, task, progress_task)
     )
 
     con.commit()
+    new_id = cur.lastrowid
     con.close()
+    return new_id
 
-def updateTask(task_id, task, progress_task):
+
+def updateTask(user_id, tasks_id, task, progress_task):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
     cur.execute(
-        "UPDATE tasks SET task=?, progress_task=? WHERE id=?", 
-        (task, progress_task, task_id)
+        """
+        UPDATE tasks
+        SET task=?, progress_task=?
+        WHERE tasks_id=? AND user_id=?
+        """,
+        (
+            task,
+            progress_task,
+            tasks_id,
+            user_id
+        )
     )
 
     con.commit()
     con.close()
 
-def deleteTask(task_id):
+
+def updateTaskProgress(user_id, tasks_id, progress_task):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
-    cur.execute("DELETE FROM tasks WHERE id=?", (task_id,))
+    cur.execute(
+        """
+        UPDATE tasks
+        SET progress_task=?
+        WHERE tasks_id=? AND user_id=?
+        """,
+        (
+            progress_task,
+            tasks_id,
+            user_id
+        )
+    )
 
     con.commit()
     con.close()
+
+
+def deleteTask(user_id, tasks_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute(
+        """
+        DELETE FROM tasks
+        WHERE tasks_id=? AND user_id=?
+        """,
+        (
+            tasks_id,
+            user_id
+        )
+    )
+
+    con.commit()
+    con.close()
+
 
 
 def getEvents(user_id):
