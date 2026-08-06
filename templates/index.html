@@ -7,7 +7,7 @@
         <hr class="divider">
         <div class="dashboard-grid">
             <div class="grade-section">
-                <button type="titles">Grade Table</button>
+                <a href="/grade_table"><button type="titles">Grade Table</button></a>
                 <div class="grade-table-box">
                     <table class="grade-table">
                         <tr>
@@ -37,7 +37,7 @@
             </div>
 
             <div class="timetable-section">
-                <button type="titles">Timetable</button>
+                <a href="/timetable"><button type="titles">Timetable</button></a>
                 <div class="timetable-grid">
                     <h2>Week A</h2>
                     <table class="timetable-table">
@@ -164,62 +164,93 @@
     </section>
 
     <section class="top-section">
-        <div class="planner-grid">
-            
-    <div class="goals-box">
-        <h2>Goals</h2>
-        <ul id="goals-list">
-            {% for goal in goals %}
-            <li data-id="{{ goal.goals_id }}">
-                <span class="goal-text">{{ goal.goal }}</span>
-                <span class="progress">{{ goal.progress_goal }}</span>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <button type= "titles" onclick="openGoalsPopup()">Edit Goals</button>
-    </div>
-
-
-
-        <div class="tasks-box">
-            <h2>Tasks</h2>
-            <ul id="task-list">
-                {% for task in tasks %}
-                <li data-id="{{ task.id }}">
-                    <span>{{ task.task }}</span>
-                    <span class="progress">{{ task.progress_task }}</span>
+    <div class="planner-grid">
+    <div class="goals-tasks-container">
+        <div class="goals-box">
+            <h2>Goals</h2>
+            <ul id="goals-list">
+                {% for goal in goals %}
+                <li data-id="{{ goal.goals_id }}">
+                    <span class="goal-text">{{ goal.goal }}</span>
+                    <span class="progress">{{ goal.progress_goal }}</span>
                 </li>
                 {% endfor %}
             </ul>
-            <button type="titles" onclick="openTasksPopup()">Edit Task</button>
+
+            <button type= "titles" onclick="openGoalsPopup()">Edit Goals</button>
         </div>
+
+            <div class="tasks-box">
+                <h2>Tasks</h2>
+                <ul id="tasks-list">
+                    {% for task in tasks %}
+                    <li data-id="{{ task.tasks_id }}">
+                        <span class="task-text">{{ task.task }}</span>
+                        <span class="progress">{{ task.progress_task }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <button type="titles" onclick="openTasksPopup()">Edit Task</button>
+            </div>
+    </div>
 
         <div class="calendar-box">
                 <button type="titles">Calendar</button>
-                <div class="calendar-grid">
-                    {% for day in calendar %}
-                        <div class="calendar-day">
-                            <span>{{ day.name }}</span>
-                            <div class="events">
-                                {% for event in day.events %}
-                                    <p>{{ event }}</p>
-                                {% endfor %}
-                            </div>
+                <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="cal-btn" onclick="prevMonth()">‹</button>
+                            <span id="calendar-month"></span>
+                            <button class="cal-btn" onclick="nextMonth()">›</button>
                         </div>
-                    {% endfor %}
+
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                                <!-- JS will fill this -->
+                            </tbody>
+                        </table>
+
+                        <button class="add-event-btn">Add Event +</button>
+                    </div>
                 </div>
-            </div>
             <div class="schedule-box">
                 <button type="titles">Schedule</button>
-                <div class="schedule-grid">
-                    {% for item in schedule %}
-                        <div class="schedule-item">
-                            <span>{{ item.time }}</span>
-                            <p>{{ item.activity }}</p>
-                        </div>
-                    {% endfor %}
-                    </div>
+                <table class="schedule-grid">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                            <th>Sunday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        {% for time in ["8AM","9AM","10AM","11AM","12PM","1PM","2PM"] %}
+                        <tr>
+                            <th>{{ time }}</th>
+
+                            {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+    <button class="add-task-btn" onclick="addScheduleTask()">Add Task</button>
     </section>
 
 </div>
@@ -239,8 +270,6 @@
                     <option value="Completed" {% if goal.progress_goal == 'Completed' %}selected{% endif %}>Completed</option>
                 </select>
                 <button onclick='editGoal({{ goal.goals_id }}, {{ goal.goal|tojson }}, {{ goal.progress_goal|tojson }})'>Edit</button>
-
-
                 <button onclick='confirmDeleteGoal({{ goal.goals_id }})'>Delete</button>
             </li>
             {% endfor %}
@@ -276,7 +305,6 @@
             <button onclick="saveGoalEdit()">Save</button>
             <button onclick="closeGoalEdit()">Cancel</button>
         </div>
-
     </div>
 </div>
 
@@ -291,24 +319,22 @@
     </div>
 </div>
 
-
-
 <div id="tasksPopup" class="popup-overlay" style="display:none;">
     <div class="popup-box">
         <h1>Tasks</h1>
         <p>View all your tasks, add, edit and remove tasks.</p>
-        <ul class="popup-scroll">
+        <ul id="tasks-popup-list" class="popup-scroll">
             {% for task in tasks %}
-            <li class="popup-item" data-id="{{ task.id }}">
-                <span>{{ task.task }}</span>
-                <select  onchange="updateTaskProgress('{{ task.id }}', this.value)">
-                    <option value="Not Started" {% if task.progress_task == 'Not Started' %}selected{% endif %}>Not Started</option>
-                    <option value="In Progress" {% if task.progress_task == 'In Progress' %}selected{% endif %}>In Progress</option>
-                    <option value="Completed" {% if task.progress_task == 'Completed' %}selected{% endif %}>Completed</option>
-                </select>
-                <button onclick="editTask('{{ task.id }}', '{{ task.task }}', '{{ task.progress_task }}')">Edit</button>
-                <button onclick="confirmDeleteTask('{{ task.id }}')">Delete</button>
-            </li>
+                <li class="popup-item" data-id="{{ task.tasks_id }}">
+                    <span class="task-text">{{ task.task }}</span>
+                    <select  onchange="updateTaskProgress('{{ task.tasks_id }}', this.value)">
+                        <option value="Not Started" {% if task.progress_task == 'Not Started' %}selected{% endif %}>Not Started</option>
+                        <option value="In Progress" {% if task.progress_task == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Completed" {% if task.progress_task == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                    <button onclick='editTask({{ task.tasks_id }}, {{ task.task|tojson }}, {{ task.progress_task|tojson }})'>Edit</button>
+                    <button onclick='confirmDeleteTask({{ task.tasks_id }})'>Delete</button>
+                </li>
             {% endfor %}
         </ul>
         <button onclick="openAddTask()">Add Task</button>
@@ -318,12 +344,12 @@
             <h2>Edit Task</h2>
             <input type="hidden" id="edit_task_id">
             <label>Task:</label>
-            <input type="text" id="edit_task_task" >
+            <input type="text" id="edit_task_text" >
             <label>Progress:</label>
-            <select id="edit_task_progress_task">
-                <option>Not Started</option>
-                <option>In Progress</option>
-                <option>Completed</option>
+            <select id="edit_task_progress">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
             </select>
             <button onclick="saveTaskEdit()">Save</button>
             <button onclick="closeTaskEdit()">Cancel</button>
@@ -332,12 +358,12 @@
         <div id="taskAddBox" class="edit-box" style="display:none;">
             <h2>Add Task</h2>
             <label>Task:</label>
-            <input type="text" id="add_task_task">
+            <input type="text" id="add_task_text">
             <label>Progress:</label>
-            <select id="add_task_progress_task">
-                <option>Not Started</option>
-                <option>In Progress</option>
-                <option>Completed</option>
+            <select id="add_task_progress">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
             </select>
             <button onclick="saveNewTask()">Save</button>
             <button onclick="closeAddTask()">Cancel</button>
@@ -345,14 +371,15 @@
     </div>
 </div>
 
-<div id="deleteConfirm" class="popup-overlay" style="display:none;">
+<div id="deleteTaskConfirm" class="popup-overlay">
     <div class="popup-box">
-        <h2>Confirm Deletion</h2>
-        <p>Are you sure you want to delete this item?</p>
-        <button id="confirmDeleteBtn">Yes, Delete</button>
-        <button onclick="closeDeleteConfirm()">Cancel</button>
+        <h2>Are you sure?</h2>
+        <p>This action cannot be undone.</p>
+        <button id="deleteTaskYes">Delete</button>
+        <button onclick="closeDeleteTaskConfirm()">Cancel</button>
     </div>
 </div>
+
 
 <script src="../static/js/index.js"></script>
 

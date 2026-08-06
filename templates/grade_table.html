@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="grade_page">
+    <div class="grade-table-page">
+        <h1>Grade Table</h1>
+        <hr class="divider">
+        <p>Add in your results from your assessments and let the table do the magic.</p>
+    </div>
+        <table class="grade-table" id="gradeTable">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Term 1</th>
+                    <th>Term 2</th>
+                    <th>S1</th>
+                    <th>Term 3</th>
+                    <th>Term 4</th>
+                    <th>S2</th>
+                    <th>Average</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for row in grades %}
+                <tr data-id="{{ row.grades_id }}">
+
+                    <td>
+                        <input type="text" class="subject-input" value="{{ row.subject }}">
+                    </td>
+                    <td>
+                        <input type="number" class="grade-input" value="{{ row.term_1 }}" min="0" max="100" oninput="calculateRow(this)">
+                    </td>
+                    <td>
+                        <input type="number" class="grade-input" value="{{ row.term_2 }}" min="0" max="100" oninput="calculateRow(this)">
+                    </td>
+                    <td>
+                        <input type="text" class="semester1" value="{{ row.semester_1 }}">
+                    </td>
+                    <td>
+                        <input type="number" class="grade-input" value="{{ row.term_3 }}" min="0" max="100" oninput="calculateRow(this)">
+                    </td>
+                    <td>
+                        <input type="number" class="grade-input" value="{{ row.term_4 }}" min="0" max="100" oninput="calculateRow(this)">
+                    </td>
+                    <td>
+                        <input type="text" class="semester2" value="{{ row.semester_2 }}">
+                    </td>
+                    <td class="average">{{ row.average }}</td>
+                    <td>
+                        <button onClick ="deleteRow(this)">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+     <div class = "controls">
+        <button onclick="addSubject()"> Add Subject</button>
+        <button onclick="saveGrades()"> Save Grades</button>
+            <div class="back-button">
+        <a href="/index"><button>Back</button></a>
+    </div>
+</div>
+<script src="../static/js/grade_table.js"></script>
+{% endblock %}
