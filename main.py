@@ -246,5 +246,12 @@ def delete_subject(timetable_id):
     dbHandler.deleteSubject(timetable_id)
     return "OK"
 
+
+@app.route("/calender", methods=["GET"])
+def calender():
+    user_id = session.get("user_id")
+    event = dbHandler.getEvents(user_id)
+    return render_template("calender.html", event=event)
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

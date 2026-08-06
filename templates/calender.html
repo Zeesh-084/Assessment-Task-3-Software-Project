@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="calendar-page">
+
+    <h1>Calendar</h1>
+    <hr class="divider">
+
+    <div class="calendar-layout">
+
+        <!-- LEFT: MONTH CALENDAR -->
+        <div class="calendar-container">
+
+            <div class="calendar-header">
+                <button class="cal-btn" onclick="prevMonth()">‹</button>
+                <span id="calendar-month"></span>
+                <button class="cal-btn" onclick="nextMonth()">›</button>
+            </div>
+
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body">
+                    <!-- JS will generate days -->
+                </tbody>
+            </table>
+
+            <button class="add-event-btn" onclick="openEventPopup()">Add Event +</button>
+        </div>
+
+        <!-- RIGHT: UPCOMING EVENTS -->
+        <div class="events-sidebar">
+            <h2>Coming Up Events</h2>
+
+            <ul class="events-list">
+                {% for event in events %}
+                <li class="event-item">
+                    <strong>{{ event.event_detail }}</strong><br>
+                    <span>{{ event.event_date }}</span><br>
+                    <span>{{ event.event_deadline }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- EVENT POPUP -->
+<div id="eventPopup" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Add Event</h2>
+
+        <form id="eventForm" method="POST" action="/save_event">
+
+            <label>Title:</label>
+            <input type="text" name="event_detail" required>
+
+            <label>Date:</label>
+            <input type="date" name="event_date" required>
+
+            <label>Start Time:</label>
+            <input type="time" name="event_time" required>
+
+            <label>Repeat:</label>
+            <select name="event_repeat">
+                <option>Does Not Repeat</option>
+                <option>Daily</option>
+                <option>Weekly</option>
+                <option>Monthly</option>
+            </select>
+
+            <label>Deadline:</label>
+            <input type="date" name="event_deadline" required>
+            <div class="controls">
+                <button type="submit">Save</button>
+                <button type="button" onclick="closeEventPopup()">Cancel</button>
+                <a href="/index"><button>Back</button></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../static/js/calendar.js"></script>
+
+{% endblock %}
