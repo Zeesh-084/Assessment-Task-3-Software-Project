@@ -1,10 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <div class="timetable_page">
-    <div class="timetable-table-page">
-         <h1>Timetable</h1>
-    </div>
-        <table class="timetable" id="timetable">
+
+    <h1>Timetable</h1>
+    <hr class="divider">
+
+    <p>Edit your timetable for Week A and Week B. Click any cell to type your subject.</p>
+
+    <div class="timetable-grid">
+
+        <!-- WEEK A -->
+        <h2>Week A</h2>
+        <table class="timetable-table" id="weekA">
             <thead>
                 <tr>
                     <th>Period</th>
@@ -15,9 +23,87 @@
                     <th>Friday</th>
                 </tr>
             </thead>
+            <tbody>
+                {% for period in ["BeforeSchool","P1","P2","P3","P4","AfterSchool"] %}
+                <tr>
+                    <th>{{ period }}</th>
+                    {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday"] %}
+                    <td>
+                        <input type="text"
+                               class="timetable-input"
+                               value="{{ weekA.get(day, {}).get(period,'') }}">
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-    </div>
+
+        <!-- WEEK B -->
+        <h2>Week B</h2>
+        <table class="timetable-table" id="weekB">
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for period in ["BeforeSchool","P1","P2","P3","P4","AfterSchool"] %}
+                <tr>
+                    <th>{{ period }}</th>
+                    {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday"] %}
+                    <td>
+                        <input type="text"
+                               class="timetable-input"
+                               value="{{ weekB.get(day, {}).get(period,'') }}">
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </div>
 
+    <hr class="divider">
+
+    <!-- SUBJECT / TEACHER / ROOM LIST -->
+    <h2>Your Subjects</h2>
+
+    <table class="subject-table" id="subjectTable">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in timetable %}
+            <tr data-id="{{ row.timetable_id }}">
+                <td><input type="text" class="subject-input" value="{{ row.subject }}"></td>
+                <td><input type="text" class="teacher-input" value="{{ row.teacher }}"></td>
+                <td><input type="text" class="room-input" value="{{ row.rooms }}"></td>
+                <td><button onclick="deleteSubject(this)">Delete</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="controls">
+        <button onclick="addSubject()">Add Subject</button>
+        <button onclick="saveTimetable()">Save Timetable</button>
+        <a href="/index"><button>Back</button></a>
+    </div>
+
+</div>
+
+<script src="/static/js/timetable.js"></script>
 
 {% endblock %}

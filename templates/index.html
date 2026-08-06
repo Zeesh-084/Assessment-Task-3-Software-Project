@@ -193,31 +193,64 @@
                 <button type="titles" onclick="openTasksPopup()">Edit Task</button>
             </div>
     </div>
+
         <div class="calendar-box">
                 <button type="titles">Calendar</button>
-                <div class="calendar-grid">
-                    {% for day in calendar %}
-                        <div class="calendar-day">
-                            <span>{{ day.name }}</span>
-                            <div class="events">
-                                {% for event in day.events %}
-                                    <p>{{ event }}</p>
-                                {% endfor %}
-                            </div>
+                <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="cal-btn" onclick="prevMonth()">‹</button>
+                            <span id="calendar-month"></span>
+                            <button class="cal-btn" onclick="nextMonth()">›</button>
                         </div>
-                    {% endfor %}
+
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                                <!-- JS will fill this -->
+                            </tbody>
+                        </table>
+
+                        <button class="add-event-btn">Add Event +</button>
+                    </div>
                 </div>
-            </div>
             <div class="schedule-box">
                 <button type="titles">Schedule</button>
-                <div class="schedule-grid">
-                    {% for item in schedule %}
-                        <div class="schedule-item">
-                            <span>{{ item.time }}</span>
-                            <p>{{ item.activity }}</p>
-                        </div>
-                    {% endfor %}
-                    </div>
+                <table class="schedule-grid">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                            <th>Sunday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        {% for time in ["8AM","9AM","10AM","11AM","12PM","1PM","2PM"] %}
+                        <tr>
+                            <th>{{ time }}</th>
+
+                            {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+    <button class="add-task-btn" onclick="addScheduleTask()">Add Task</button>
     </section>
 
 </div>

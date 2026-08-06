@@ -395,3 +395,77 @@ document.getElementById("deleteTaskYes").onclick = function () {
             alert("Could not delete task");
         });
 };
+
+
+// calender for homepage
+const calendarBody = document.getElementById("calendar-body");
+const calendarMonth = document.getElementById("calendar-month");
+
+let currentDate = new Date();
+
+function loadCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    calendarMonth.innerText = currentDate.toLocaleString("default", {
+        month: "long",
+        year: "numeric"
+    });
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    calendarBody.innerHTML = "";
+
+    let row = document.createElement("tr");
+
+    for (let i = 0; i < firstDay; i++) {
+        row.appendChild(document.createElement("td"));
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        if (row.children.length === 7) {
+            calendarBody.appendChild(row);
+            row = document.createElement("tr");
+        }
+
+        const cell = document.createElement("td");
+        cell.innerText = day;
+        row.appendChild(cell);
+    }
+
+    calendarBody.appendChild(row);
+}
+
+function prevMonth() {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    loadCalendar();
+}
+
+function nextMonth() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    loadCalendar();
+}
+
+window.onload = loadCalendar;
+
+
+//schedule
+function addScheduleTask() {
+    const tbody = document.getElementById("schedule-body");
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <th>New</th>
+        <td><input type="text" class="schedule-input"></td>
+        <td><input type="text" class="schedule-input"></td>
+        <td><input type="text" class="schedule-input"></td>
+        <td><input type="text" class="schedule-input"></td>
+        <td><input type="text" class="schedule-input"></td>
+        <td><input type="text" class="schedule-input"></td>
+        <td><input type="text" class="schedule-input"></td>
+    `;
+
+    tbody.appendChild(row);
+}

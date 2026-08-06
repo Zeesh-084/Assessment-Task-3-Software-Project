@@ -4,6 +4,7 @@
 <div class="grade_page">
     <div class="grade-table-page">
         <h1>Grade Table</h1>
+        <hr class="divider">
         <p>Add in your results from your assessments and let the table do the magic.</p>
     </div>
         <table class="grade-table" id="gradeTable">
@@ -22,7 +23,7 @@
             <tbody>
 
                 {% for row in grades %}
-                <tr data-id="{{ row.id }}">
+                <tr data-id="{{ row.grades_id }}">
 
                     <td>
                         <input type="text" class="subject-input" value="{{ row.subject }}">
@@ -34,7 +35,7 @@
                         <input type="number" class="grade-input" value="{{ row.term_2 }}" min="0" max="100" oninput="calculateRow(this)">
                     </td>
                     <td>
-                        <input type = "text" class="semester2" value="{{ row.semester_2 }}">
+                        <input type="text" class="semester1" value="{{ row.semester_1 }}">
                     </td>
                     <td>
                         <input type="number" class="grade-input" value="{{ row.term_3 }}" min="0" max="100" oninput="calculateRow(this)">
@@ -43,9 +44,9 @@
                         <input type="number" class="grade-input" value="{{ row.term_4 }}" min="0" max="100" oninput="calculateRow(this)">
                     </td>
                     <td>
-                        <input type = "text" class="semester2" value="{{ row.semester_2 }}">
+                        <input type="text" class="semester2" value="{{ row.semester_2 }}">
                     </td>
-                    <td>{{ row.average }}</td>
+                    <td class="average">{{ row.average }}</td>
                     <td>
                         <button onClick ="deleteRow(this)">Delete</button>
                     </td>
@@ -56,8 +57,10 @@
         </div>
     </div>
      <div class = "controls">
-        <button onclick="addSubject()">+ Add Subject</button>
-        <button onclick="saveGrades()">- Save Grades</button>
+        <button onclick="addSubject()"> Add Subject</button>
+        <button onclick="saveGrades()"> Save Grades</button>
+            <div class="back-button">
+        <a href="/index"><button>Back</button></a>
     </div>
 </div>
 <script src="../static/js/grade_table.js"></script>

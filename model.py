@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import json
 
 
 def insertUser(username, password, email):
@@ -24,31 +25,19 @@ def getUser(username, password):
 
 def getGrades(user_id):
     con = sql.connect("database_files/database.db")
+    con.row_factory = sql.Row
     cur = con.cursor()
 
     cur.execute("""
-        SELECT subject, term_1, term_2, semester_1, term_3, term_4, semester_2, ROUND((term_1 + term_2 + term_3 + term_4) / 4.0,1) AS average
-        FROM grades
+        SELECT * FROM grades
         WHERE user_id = ?
+        ORDER BY grades_id ASC
     """, (user_id,))
 
 
     rows = cur.fetchall()
     con.close()
-
-    return [
-        {
-            "subject": row[0],
-            "term_1": row[1],
-            "term_2": row[2],
-            "semester_1": row[3],
-            "term_3": row[4],
-            "term_4": row[5],
-            "semester_2": row[6],
-            "average": row[7]
-        }
-        for row in rows
-    ]
+    return rows
 
 def insertGrade(user_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average):
     con = sql.connect("database_files/database.db")
@@ -62,21 +51,131 @@ def insertGrade(user_id, subject, term_1, term_2, semester_1, term_3, term_4, se
     con.commit()
     con.close()
 
-
-def getTimetable(user_id):
+def updateGrade(user_id, grades_id, subject, term_1, term_2, semester_1, term_3, term_4, semester_2, average):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
 
     cur.execute("""
-        SELECT subject, teacher, rooms
-        FROM timetable
-        WHERE user_id = ?
-    """, (user_id,))
+        UPDATE grades
+        SET subject=?, term_1=?, term_2=?, semester_1=?,
+            term_3=?, term_4=?, semester_2=?, average=?
+        WHERE grades_id=? AND user_id=?
+    """, (
+        subject, term_1, term_2, semester_1,
+        term_3, term_4, semester_2, average,
+        grades_id, user_id
+    ))
 
-    rows = cur.fetchall()
+    con.commit()
     con.close()
 
-    return rows
+
+def deleteGrade(user_id, grades_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        DELETE FROM grades
+        WHERE grades_id = ? AND user_id = ?
+    """, (grades_id, user_id))
+
+    con.commit()
+    con.close()
+
+
+def getTimetable(user_id):
+
+    con = sql.connect("database_files/database.db")
+    con.row_factory = sql.Row
+    cur = con.cursor()
+
+    cur.execute("""
+        SELECT *
+        FROM timetable
+        WHERE user_id=?
+    """,(user_id,))
+    subjects = cur.fetchall()
+
+    cur.execute("""
+        SELECT weekA, weekB
+        FROM timetable_grid
+        WHERE user_id=?
+    """,(user_id,))
+    grid = cur.fetchone()
+
+    if grid:
+        weekA = json.loads(grid["weekA"] or "{}")
+        weekB = json.loads(grid["weekB"] or "{}")
+    else:
+        weekA = {}
+        weekB = {}
+
+    con.close()
+    return subjects, weekA, weekB
+
+
+def insertSubject(user_id, subject, teacher, rooms):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        INSERT INTO timetable (user_id, subject, teacher, rooms)
+        VALUES (?, ?, ?, ?)
+    """, (user_id, subject, teacher, rooms))
+
+    con.commit()
+    con.close()
+
+def updateSubject(timetable_id, subject, teacher, rooms):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        UPDATE timetable
+        SET subject=?, teacher=?, rooms=?
+        WHERE timetable_id=?
+    """, (subject, teacher, rooms, timetable_id))
+
+    con.commit()
+    con.close()
+
+def deleteSubject(timetable_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        DELETE FROM timetable
+        WHERE timetable_id=?
+    """, (timetable_id,))
+
+    con.commit()
+    con.close()
+
+def saveWeekGrid(user_id, weekA, weekB):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    # Check if row exists
+    cur.execute("SELECT grid_id FROM timetable_grid WHERE user_id=?", (user_id,))
+    row = cur.fetchone()
+
+    if row:
+        # Update existing row
+        cur.execute("""
+            UPDATE timetable_grid
+            SET weekA=?, weekB=?
+            WHERE user_id=?
+        """, (json.dumps(weekA), json.dumps(weekB), user_id))
+    else:
+        # Insert new row
+        cur.execute("""
+            INSERT INTO timetable_grid (user_id, weekA, weekB)
+            VALUES (?, ?, ?)
+        """, (user_id, json.dumps(weekA), json.dumps(weekB)))
+
+    con.commit()
+    con.close()
+
 
 def getGoals(user_id):
     con = sql.connect("database_files/database.db")

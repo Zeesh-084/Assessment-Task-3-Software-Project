@@ -63,4 +63,8 @@
     -- profile_picture BLOB NULL,
     -- activate_2fa INTEGER NULL);
 
-
+-- CREATE TABLE timetable_grid(
+   -- grid_id INTEGER PRIMARY KEY,
+   -- user_id INTEGER NOT NULL,
+   -- weekA TEXT,
+   -- weekB TEXT )

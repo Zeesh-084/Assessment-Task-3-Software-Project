@@ -1,3 +1,7 @@
+const csrfToken =
+    document.querySelector('meta[name="csrf-token"]')
+    .getAttribute("content");
+
 function calculateRow(element)
 {
     const row = element.closest("tr");
@@ -29,24 +33,26 @@ function saveGrades()
     {
         grades.push({
             grades_id: row.dataset.id || null,
-            subject: row.cells[0].querySelector("input").value,
+            subject: row.cells[0].querySelector("input").value || "Untitled",
 
             term_1: row.cells[1].querySelector("input").value || 0,
             term_2: row.cells[2].querySelector("input").value || 0,
 
-            semester_1: row.querySelector(".semester1").innerText,
+            semester_1: row.querySelector(".semester1").value|| " ", 
             term_3: row.cells[4].querySelector("input").value || 0,
             term_4: row.cells[5].querySelector("input").value || 0,
 
-            semester_2: row.querySelector(".semester2").innerText,
-            average: row.querySelector(".average").innerText
+            semester_2: row.querySelector(".semester2").value|| " ",
+            average: Math.round(parseFloat(row.querySelector(".average").innerText) || 0)
+
+
         });
     });
-
     fetch("/save_grades", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
         },
         body: JSON.stringify(grades)
     })
@@ -62,8 +68,7 @@ function saveGrades()
     });
 }
 
-function addSubject()
-{
+function addSubject() {
     const tbody = document.querySelector("#gradeTable tbody");
 
     const row = document.createElement("tr");
@@ -71,15 +76,15 @@ function addSubject()
     row.innerHTML = `
         <td><input type="text" class="subject-input"></td>
 
-        <td><input type="number" class="mark-input" oninput="calculateRow(this)"></td>
-        <td><input type="number" class="mark-input" oninput="calculateRow(this)"></td>
+        <td><input type="number" class="grade-input" oninput="calculateRow(this)"></td>
+        <td><input type="number" class="grade-input" oninput="calculateRow(this)"></td>
 
-        <td class="semester1">-</td>
+        <td><input type="text" class="semester1" value="-"></td>
 
-        <td><input type="number" class="mark-input" oninput="calculateRow(this)"></td>
-        <td><input type="number" class="mark-input" oninput="calculateRow(this)"></td>
+        <td><input type="number" class="grade-input" oninput="calculateRow(this)"></td>
+        <td><input type="number" class="grade-input" oninput="calculateRow(this)"></td>
 
-        <td class="semester2">-</td>
+        <td><input type="text" class="semester2" value="-"></td>
 
         <td class="average">0</td>
 
@@ -88,3 +93,37 @@ function addSubject()
 
     tbody.appendChild(row);
 }
+
+
+function deleteRow(button) {
+    const row = button.closest("tr");
+
+    const id = row.dataset.id;
+
+    if (id) {
+        fetch(`/delete_grade/${id}`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken
+                }
+            })
+        .then(() => {
+            row.remove();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error deleting grade.");
+        });
+    } 
+    else {
+        // If row is newly added and not saved yet → just remove it
+        row.remove();
+    }
+}
+
+window.onload = () => {
+    document.querySelectorAll("#gradeTable tbody tr").forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        inputs.forEach(input => calculateRow(input));
+    });
+};
