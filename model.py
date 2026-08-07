@@ -366,27 +366,54 @@ def deleteTask(user_id, tasks_id):
 
 def getEvents(user_id):
     con = sql.connect("database_files/database.db")
+    con.row_factory = sql.Row
     cur = con.cursor()
 
     cur.execute("""
-        SELECT event_date, event_time, event_repeat, event_deadline, event_detail
-        FROM events
+        SELECT * FROM events
         WHERE user_id = ?
+        ORDER BY event_date ASC
     """, (user_id,))
 
     rows = cur.fetchall()
     con.close()
+    return [dict(row) for row in rows]
 
-    return [
-        {
-            "event_date": row[0],
-            "event_time": row[1],
-            "event_repeat": row[2],
-            "event_deadline": row[3],
-            "event_detail": row[4],
-        }
-        for row in rows
-    ]
+
+def insertEvent(user_id, event_date, event_time, event_repeat, event_deadline, event_detail):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        INSERT INTO events (user_id, event_date, event_time, event_repeat, event_deadline, event_detail)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (user_id, event_date, event_time, event_repeat, event_deadline, event_detail))
+
+    con.commit()
+    con.close()
+    
+def updateEvent(event_id, event_date, event_time, event_repeat, event_deadline, event_detail):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        UPDATE events
+        SET event_date=?, event_time=?, event_repeat=?, event_deadline=?, event_detail=?
+        WHERE event_id=?
+    """, (event_date, event_time, event_repeat, event_deadline, event_detail, event_id))
+
+    con.commit()
+    con.close()
+
+
+def deleteEvent(event_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("DELETE FROM events WHERE event_id=?", (event_id,))
+    con.commit()
+    con.close()
+
 
 
 def getSchedule(user_id):

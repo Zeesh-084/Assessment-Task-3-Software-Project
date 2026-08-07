@@ -28,16 +28,16 @@ function loadCalendar(events) {
         const cell = document.createElement("td");
         cell.innerText = day;
 
-        // Check if event exists on this day
-        const dateStr = `${year}-${month + 1}-${day}`;
-        const event = events.find(e => e.event_date === dateStr);
+        const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
 
-        if (event) {
+        const dayEvents = events.filter(e => e.event_date === dateStr);
+
+        if (dayEvents.length > 0) {
             const dot = document.createElement("div");
             dot.classList.add("event-dot");
             cell.appendChild(dot);
 
-            cell.title = event.event_detail;
+            cell.title = dayEvents.map(e => e.event_detail).join("\n");
         }
 
         row.appendChild(cell);
@@ -68,3 +68,30 @@ window.onload = () => {
     window.eventsData = JSON.parse(document.getElementById("events-json").textContent);
     loadCalendar(window.eventsData);
 };
+
+function openEditEventPopup(eventId) {
+    const event = window.eventsData.find(e => e.event_id === eventId);
+
+    document.getElementById("edit_event_id").value = event.event_id;
+    document.getElementById("edit_event_detail").value = event.event_detail;
+    document.getElementById("edit_event_date").value = event.event_date;
+    document.getElementById("edit_event_time").value = event.event_time;
+    document.getElementById("edit_event_repeat").value = event.event_repeat;
+    document.getElementById("edit_event_deadline").value = event.event_deadline;
+
+    document.getElementById("editEventPopup").style.display = "block";
+}
+
+function closeEditEventPopup() {
+    document.getElementById("editEventPopup").style.display = "none";
+}
+
+function deleteEvent() {
+    const id = document.getElementById("edit_event_id").value;
+
+    fetch(`/delete_event/${id}`, {
+        method: "POST"
+    }).then(() => {
+        window.location.reload();
+    });
+}
