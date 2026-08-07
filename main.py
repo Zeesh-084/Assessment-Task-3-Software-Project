@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, redirect, session
 from flask_wtf.csrf import CSRFProtect
 import model as dbHandler
 import jsonify
+import base64
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "my-super-secret-key"
@@ -361,6 +363,87 @@ def delete_schedule(schedule_id):
     return "OK", 200
 
 
+@app.route("/settings")
+def settings():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect("/login")
+
+    user = dbHandler.getUserById(user_id)
+    settings = dbHandler.getSettings(user_id)
+
+    return render_template(
+        "setting.html",
+        user=user,
+        settings=settings,
+        theme=settings["theme"]
+    )
+
+
+@app.route("/upload_profile_picture", methods=["POST"])
+def upload_profile_picture():
+    user_id = session.get("user_id")
+    file = request.files.get("profile_picture")
+
+    if not user_id or not file:
+        return redirect("/settings")
+
+    picture_data = base64.b64encode(file.read()).decode("utf-8")
+    dbHandler.updateProfilePicture(user_id, picture_data)
+    return redirect("/settings")
+
+@app.route("/remove_profile_picture", methods=["POST"])
+def remove_profile_picture():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect("/login")
+
+    dbHandler.removeProfilePicture(user_id)
+    return redirect("/settings")
+
+@app.route("/update_user_info", methods=["POST"])
+def update_user_info():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect("/login")
+
+    display_name = request.form["display_name"]
+    email = request.form["email"]
+    dbHandler.updateUserInfo(user_id, display_name, email)
+    return redirect("/settings")
+
+@app.route("/change_password", methods=["POST"])
+def change_password():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect("/login")
+
+    old = request.form["old_password"]
+    new = request.form["new_password"]
+    dbHandler.changePassword(user_id, old, new)
+    return redirect("/settings")
+
+@app.route("/update_misc_settings", methods=["POST"])
+def update_misc_settings():
+    theme = request.form["theme"]
+    time_format = request.form["time_format"]
+    dbHandler.updateMiscSettings(session["user_id"], theme, time_format)
+    return redirect("/settings")
+
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect("/login")
+
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    user_id = session.get("user_id")
+    if user_id:
+        dbHandler.deleteAccount(user_id)
+    session.clear()
+    return redirect("/signup")
 
 
 if __name__ == '__main__':

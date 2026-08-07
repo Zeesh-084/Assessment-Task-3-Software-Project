@@ -480,3 +480,137 @@ def deleteSchedule(schedule_id, user_id):
     con.close()
 
 
+import sqlite3 as sql
+import base64
+
+DB_PATH = "database_files/database.db"
+
+def getSettings(user_id):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        SELECT profile_picture, activate_2fa, theme, time_format
+        FROM setting
+        WHERE user_id=?
+    """, (user_id,))
+    row = cur.fetchone()
+    con.close()
+
+    if row is None:
+        return {
+            "profile_picture": None,
+            "activate_2fa": 0,
+            "theme": "light",
+            "time_format": "12"
+        }
+
+    return {
+        "profile_picture": row[0],
+        "activate_2fa": row[1],
+        "theme": row[2],
+        "time_format": row[3]
+    }
+
+def createDefaultSettings(user_id):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        INSERT INTO setting (user_id, profile_picture, activate_2fa, theme, time_format)
+        VALUES (?, NULL, 0, 'light', '12')
+    """, (user_id,))
+    con.commit()
+    con.close()
+
+def updateProfilePicture(user_id, picture_data):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        UPDATE setting
+        SET profile_picture=?
+        WHERE user_id=?
+    """, (picture_data, user_id))
+    con.commit()
+    con.close()
+
+def removeProfilePicture(user_id):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        UPDATE setting
+        SET profile_picture=NULL
+        WHERE user_id=?
+    """, (user_id,))
+    con.commit()
+    con.close()
+
+def updateUserInfo(user_id, display_name, email):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        UPDATE users
+        SET username=?, email=?
+        WHERE user_id=?
+    """, (display_name, email, user_id))
+    con.commit()
+    con.close()
+
+def changePassword(user_id, old, new):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("SELECT password FROM users WHERE user_id=?", (user_id,))
+    row = cur.fetchone()
+    if row is None:
+        con.close()
+        return False
+
+    current = row[0]
+    if current != old:
+        con.close()
+        return False
+
+    cur.execute("""
+        UPDATE users
+        SET password=?
+        WHERE user_id=?
+    """, (new, user_id))
+    con.commit()
+    con.close()
+    return True
+
+def updateMiscSettings(user_id, theme, time_format):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        UPDATE setting
+        SET theme=?, time_format=?
+        WHERE user_id=?
+    """, (theme, time_format, user_id))
+    con.commit()
+    con.close()
+
+
+def deleteAccount(user_id):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("DELETE FROM users WHERE user_id=?", (user_id,))
+    cur.execute("DELETE FROM setting WHERE user_id=?", (user_id,))
+    con.commit()
+    con.close()
+
+def getUserById(user_id):
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        SELECT user_id, username, email
+        FROM users
+        WHERE user_id=?
+    """, (user_id,))
+    row = cur.fetchone()
+    con.close()
+    if row:
+        return {
+            "user_id": row[0],
+            "username": row[1],
+            "email": row[2]
+        }
+    return 

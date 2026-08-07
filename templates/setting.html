@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="settings-wrapper">
+    <!-- Main content -->
+    <div class="settings-page">
+
+        <!-- Profile Picture -->
+        <div class="settings-section">
+            <h3>Profile Picture</h3>
+
+            <div class="pfp-container">
+                {% if settings.profile_picture %}
+                    <img src="data:image/png;base64,{{ settings.profile_picture }}" class="profile-img">
+                {% else %}
+                    <div class="profile-img placeholder"></div>
+                {% endif %}
+            </div>
+
+            <form method="POST" action="/upload_profile_picture" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="file" name="profile_picture" accept="image/*">
+                <button type="submit" class="primary-btn">Upload</button>
+            </form>
+
+            <form method="POST" action="/remove_profile_picture">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="secondary-btn">Remove</button>
+            </form>
+        </div>
+
+        <!-- User Information -->
+        <div class="settings-section">
+            <h3>User Information</h3>
+
+            <form method="POST" action="/update_user_info">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <label>Display Name:</label>
+                <input type="text" name="display_name" value="{{ user.username }}">
+
+                <label>Email:</label>
+                <input type="email" name="email" value="{{ user.email }}">
+
+                <label>Password:</label>
+                <button type="button" class="primary-btn" onclick="openPasswordPopup()">Change Password?</button>
+
+                <button type="submit" class="primary-btn">Save</button>
+            </form>
+        </div>
+
+        <!-- Miscellaneous -->
+        <div class="settings-section">
+            <h3>Miscellaneous</h3>
+
+            <form method="POST" action="/update_misc_settings">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="toggle-row">
+                    <span>Theme:</span>
+                    <label class="toggle">
+                        <input type="radio" name="theme" value="light"
+                               {% if settings.theme == 'light' %}checked{% endif %}>
+                        <span>Light</span>
+                    </label>
+                    <label class="toggle">
+                        <input type="radio" name="theme" value="dark"
+                               {% if settings.theme == 'dark' %}checked{% endif %}>
+                        <span>Dark</span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <span>Time Format:</span>
+                    <label class="toggle">
+                        <input type="radio" name="time_format" value="12"
+                               {% if settings.time_format == '12' %}checked{% endif %}>
+                        <span>12 Hour</span>
+                    </label>
+                    <label class="toggle">
+                        <input type="radio" name="time_format" value="24"
+                               {% if settings.time_format == '24' %}checked{% endif %}>
+                        <span>24 Hour</span>
+                    </label>
+                </div>
+
+                <button type="button" class="primary-btn" onclick="activate2FA()">Activate 2FA</button>
+                <button type="submit" class="primary-btn">Save</button>
+            </form>
+        </div>
+
+        <!-- Danger -->
+        <div class="settings-section danger-zone">
+            <h3>Danger!</h3>
+
+            <button class="danger-btn" onclick="openLogoutWarning()">Logout</button>
+            <button class="danger-btn" onclick="openDeleteWarning()">Delete Account</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Password Popup -->
+<div id="passwordPopup" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Change Password</h2>
+        <form method="POST" action="/change_password">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label>Old Password:</label>
+            <input type="password" name="old_password" required>
+
+            <label>New Password:</label>
+            <input type="password" name="new_password" required>
+
+            <button type="submit" class="primary-btn">Save</button>
+            <button type="button" class="secondary-btn" onclick="closePasswordPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Logout Warning -->
+<div id="logoutWarning" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Are you sure?</h2>
+        <p>You will be logged out.</p>
+        <form method="POST" action="/logout">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="danger-btn">Confirm Logout</button>
+            <button type="button" class="secondary-btn" onclick="closeLogoutWarning()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Warning -->
+<div id="deleteWarning" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Delete Account?</h2>
+        <p>This action cannot be undone.</p>
+        <form method="POST" action="/delete_account">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="danger-btn">Delete Account</button>
+            <button type="button" class="secondary-btn" onclick="closeDeleteWarning()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<a href="/index"><button>Back</button></a>
+<script src="../static/js/setting.js"></script>
+
+{% endblock %}
