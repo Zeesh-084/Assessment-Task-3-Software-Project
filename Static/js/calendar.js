@@ -1,5 +1,7 @@
 let currentDate = new Date();
 
+/* ------------------ MAIN CALENDAR RENDER ------------------ */
+
 function loadCalendar(events) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -28,16 +30,60 @@ function loadCalendar(events) {
         const cell = document.createElement("td");
         cell.innerText = day;
 
-        const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+        const cellDate = new Date(year, month, day);
 
-        const dayEvents = events.filter(e => e.event_date === dateStr);
+        const dayEvents = events.filter(e => {
+            const [y, m, d] = e.event_deadline.split("-");
+            const eventDate = new Date(Number(y), Number(m) - 1, Number(d));
+
+            const repeat = (e.event_repeat || "").toLowerCase();
+
+            // NON-REPEAT
+            if (!repeat.includes("daily") && !repeat.includes("weekly")) {
+                return eventDate.getTime() === cellDate.getTime();
+            }
+
+            // DAILY
+            if (repeat.includes("daily")) {
+                return (
+                    cellDate >= eventDate &&
+                    cellDate.getMonth() === currentDate.getMonth() &&
+                    cellDate.getFullYear() === currentDate.getFullYear()
+                );
+            }
+
+            // WEEKLY
+            if (repeat.includes("weekly")) {
+                return (
+                    cellDate >= eventDate &&
+                    cellDate.getDay() === eventDate.getDay() &&
+                    cellDate.getMonth() === currentDate.getMonth() &&
+                    cellDate.getFullYear() === currentDate.getFullYear()
+                );
+            }
+
+            return false;
+        });
 
         if (dayEvents.length > 0) {
-            const dot = document.createElement("div");
-            dot.classList.add("event-dot");
-            cell.appendChild(dot);
+            dayEvents.forEach(ev => {
+                const dot = document.createElement("div");
+                dot.classList.add("event-dot");
 
-            cell.title = dayEvents.map(e => e.event_detail).join("\n");
+                const repeat = (ev.event_repeat || "").toLowerCase();
+                if (repeat.includes("daily")) dot.classList.add("event-dot-daily");
+                if (repeat.includes("weekly")) dot.classList.add("event-dot-weekly");
+
+                cell.appendChild(dot);
+            });
+
+            cell.title = dayEvents.map(ev =>
+                `${ev.event_detail}
+Date: ${ev.event_date}
+Time: ${ev.event_time}
+Repeat: ${ev.event_repeat}
+Deadline: ${ev.event_deadline}`
+            ).join("\n\n");
         }
 
         row.appendChild(cell);
@@ -45,6 +91,8 @@ function loadCalendar(events) {
 
     body.appendChild(row);
 }
+
+/* ------------------ MONTH NAVIGATION ------------------ */
 
 function prevMonth() {
     currentDate.setMonth(currentDate.getMonth() - 1);
@@ -56,6 +104,8 @@ function nextMonth() {
     loadCalendar(window.eventsData);
 }
 
+/* ------------------ POPUPS ------------------ */
+
 function openEventPopup() {
     document.getElementById("eventPopup").style.display = "block";
 }
@@ -64,13 +114,9 @@ function closeEventPopup() {
     document.getElementById("eventPopup").style.display = "none";
 }
 
-window.onload = () => {
-    window.eventsData = JSON.parse(document.getElementById("events-json").textContent);
-    loadCalendar(window.eventsData);
-};
-
 function openEditEventPopup(eventId) {
     const event = window.eventsData.find(e => e.event_id === eventId);
+    if (!event) return;
 
     document.getElementById("edit_event_id").value = event.event_id;
     document.getElementById("edit_event_detail").value = event.event_detail;
@@ -86,12 +132,34 @@ function closeEditEventPopup() {
     document.getElementById("editEventPopup").style.display = "none";
 }
 
+/* ------------------ DELETE EVENT ------------------ */
+
 function deleteEvent() {
     const id = document.getElementById("edit_event_id").value;
+    if (!id) return;
+
+    const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
 
     fetch(`/delete_event/${id}`, {
-        method: "POST"
-    }).then(() => {
-        window.location.reload();
-    });
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": csrfToken
+        },
+        body: ""
+    })
+    .then(res => {
+        if (res.ok) window.location.reload();
+        else alert("Error deleting event.");
+    })
+    .catch(() => alert("Error deleting event."));
 }
+
+/* ------------------ INITIAL LOAD ------------------ */
+
+window.onload = () => {
+    window.eventsData = JSON.parse(document.getElementById("events-json").textContent);
+    loadCalendar(window.eventsData);
+};

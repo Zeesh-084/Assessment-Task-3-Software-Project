@@ -265,6 +265,8 @@ def save_event():
     event_repeat = request.form["event_repeat"]
     event_deadline = request.form["event_deadline"]
 
+    source = request.form.get("source", "calendar")
+
     dbHandler.insertEvent(
         user_id,
         event_date,
@@ -273,8 +275,11 @@ def save_event():
         event_deadline,
         event_detail
     )
-
-    return redirect("/calendar")
+     
+    if source == "index":
+        return redirect("/index")
+    else:
+        return redirect("/calendar")
 
 @app.route("/update_event", methods=["POST"])
 def update_event():
@@ -302,9 +307,14 @@ def update_event():
 @app.route("/delete_event/<int:event_id>", methods=["POST"])
 def delete_event(event_id):
     dbHandler.deleteEvent(event_id)
-    return "OK"
+    return "OK", 200
 
+@app.route("/schedule")
+def schedule_page():
+    user_id = session.get("user_id")
+    schedule = dbHandler.getSchedule(user_id)
 
+    return render_template("schedule.html", schedule=schedule)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

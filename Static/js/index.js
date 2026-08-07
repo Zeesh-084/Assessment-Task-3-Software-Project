@@ -398,56 +398,135 @@ document.getElementById("deleteTaskYes").onclick = function () {
 
 
 // calender for homepage
-const calendarBody = document.getElementById("calendar-body");
-const calendarMonth = document.getElementById("calendar-month");
+let homeDate = new Date();
 
-let currentDate = new Date();
+/* ------------------ RENDER HOMEPAGE CALENDAR ------------------ */
 
-function loadCalendar() {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
+function loadHomeCalendar(events) {
+    const year = homeDate.getFullYear();
+    const month = homeDate.getMonth();
 
-    calendarMonth.innerText = currentDate.toLocaleString("default", {
-        month: "long",
-        year: "numeric"
-    });
+    document.getElementById("calendar-month").innerText =
+        homeDate.toLocaleString("default", { month: "long", year: "numeric" });
 
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    calendarBody.innerHTML = "";
+    const body = document.getElementById("calendar-body");
+    body.innerHTML = "";
 
     let row = document.createElement("tr");
 
+    // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
         row.appendChild(document.createElement("td"));
     }
 
+    // Loop through days
     for (let day = 1; day <= daysInMonth; day++) {
+
         if (row.children.length === 7) {
-            calendarBody.appendChild(row);
+            body.appendChild(row);
             row = document.createElement("tr");
         }
 
         const cell = document.createElement("td");
         cell.innerText = day;
+
+        const cellDate = new Date(year, month, day);
+
+        // Find events for this day (using DEADLINE)
+        const dayEvents = events.filter(e => {
+            const [y, m, d] = e.event_deadline.split("-");
+            const eventDate = new Date(Number(y), Number(m) - 1, Number(d));
+
+            const repeat = (e.event_repeat || "").toLowerCase();
+
+            // NON-REPEAT
+            if (!repeat.includes("daily") && !repeat.includes("weekly")) {
+                return eventDate.getTime() === cellDate.getTime();
+            }
+
+            // DAILY REPEAT
+            if (repeat.includes("daily")) {
+                return (
+                    cellDate >= eventDate &&
+                    cellDate.getMonth() === homeDate.getMonth() &&
+                    cellDate.getFullYear() === homeDate.getFullYear()
+                );
+            }
+
+            // WEEKLY REPEAT
+            if (repeat.includes("weekly")) {
+                return (
+                    cellDate >= eventDate &&
+                    cellDate.getDay() === eventDate.getDay() &&
+                    cellDate.getMonth() === homeDate.getMonth() &&
+                    cellDate.getFullYear() === homeDate.getFullYear()
+                );
+            }
+
+            return false;
+        });
+
+        // Add dots + tooltip
+        if (dayEvents.length > 0) {
+            dayEvents.forEach(ev => {
+                const dot = document.createElement("div");
+                dot.classList.add("event-dot");
+
+                const repeat = (ev.event_repeat || "").toLowerCase();
+                if (repeat.includes("daily")) dot.classList.add("event-dot-daily");
+                if (repeat.includes("weekly")) dot.classList.add("event-dot-weekly");
+
+                cell.appendChild(dot);
+            });
+
+            cell.title = dayEvents.map(ev =>
+                `${ev.event_detail}
+Date: ${ev.event_date}
+Time: ${ev.event_time}
+Repeat: ${ev.event_repeat}
+Deadline: ${ev.event_deadline}`
+            ).join("\n\n");
+        }
+
         row.appendChild(cell);
     }
 
-    calendarBody.appendChild(row);
+    body.appendChild(row);
 }
 
+/* ------------------ MONTH NAVIGATION ------------------ */
+
 function prevMonth() {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    loadCalendar();
+    homeDate.setMonth(homeDate.getMonth() - 1);
+    loadHomeCalendar(window.homeEvents);
 }
 
 function nextMonth() {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    loadCalendar();
+    homeDate.setMonth(homeDate.getMonth() + 1);
+    loadHomeCalendar(window.homeEvents);
 }
 
-window.onload = loadCalendar;
+/* ------------------ ADD EVENT POPUP ------------------ */
+
+function openEventPopup() {
+    document.getElementById("eventPopup").style.display = "block";
+}
+
+function closeEventPopup() {
+    document.getElementById("eventPopup").style.display = "none";
+}
+
+/* ------------------ INITIAL LOAD ------------------ */
+
+window.onload = () => {
+    const eventsJson = document.getElementById("events-json").textContent;
+    window.homeEvents = JSON.parse(eventsJson);
+    loadHomeCalendar(window.homeEvents);
+};
+
 
 
 //schedule

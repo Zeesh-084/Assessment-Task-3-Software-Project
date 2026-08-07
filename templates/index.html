@@ -196,33 +196,74 @@
 
         <div class="calendar-box">
                 <a href="/calendar"><button type="titles">Calendar</button></a>
-                <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button class="cal-btn" onclick="prevMonth()">‹</button>
-                            <span id="calendar-month"></span>
-                            <button class="cal-btn" onclick="nextMonth()">›</button>
-                        </div>
+                <script id="events-json" type="application/json">
+                    {{ events|tojson }}
+                </script>
+                        <div class="calendar-layout">
 
-                        <table class="calendar-table">
-                            <thead>
-                                <tr>
-                                    <th>Sun</th>
-                                    <th>Mon</th>
-                                    <th>Tue</th>
-                                    <th>Wed</th>
-                                    <th>Thu</th>
-                                    <th>Fri</th>
-                                    <th>Sat</th>
-                                </tr>
-                            </thead>
-                            <tbody id="calendar-body">
-                                <!-- JS will fill this -->
-                            </tbody>
-                        </table>
+        <div class="calendar-container">
 
-                        <button class="add-event-btn">Add Event +</button>
-                    </div>
-                </div>
+            <div class="calendar-header">
+                <button class="cal-btn" onclick="prevMonth()">‹</button>
+                <span id="calendar-month"></span>
+                <button class="cal-btn" onclick="nextMonth()">›</button>
+            </div>
+
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
+
+            <button class="add-event-btn" onclick="openEventPopup()">Add Event +</button>
+        </div>
+    </div>
+</div>
+    <div id="eventPopup" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Add Event</h2>
+
+        <form id="eventForm" method="POST" action="/save_event">
+
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="source" value="index">
+
+            <label>Title:</label>
+            <input type="text" name="event_detail" required>
+
+            <label>Date:</label>
+            <input type="date" name="event_date" required>
+
+            <label>Start Time:</label>
+            <input type="time" name="event_time" required>
+
+            <label>Repeat:</label>
+            <select name="event_repeat">
+                <option>Does Not Repeat</option>
+                <option>Daily</option>
+                <option>Weekly</option>
+                <option>Monthly</option>
+            </select>
+
+            <label>Deadline:</label>
+            <input type="date" name="event_deadline" required>
+
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeEventPopup()">Cancel</button>
+        </form>
+    </div>
+</div>
+</div>
             <div class="schedule-box">
                 <button type="titles">Schedule</button>
                 <table class="schedule-grid">

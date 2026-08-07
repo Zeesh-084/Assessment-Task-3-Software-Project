@@ -854,3 +854,23 @@ button[type="titles"] {
     cursor: pointer;
 }
 
+.event-dot {
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+/* Daily repeat = blue dot */
+.event-dot-daily {
+    background: #3a6ee8;
+}
+
+/* Weekly repeat = purple dot */
+.event-dot-weekly {
+    background: #8e44ad;
+}
+

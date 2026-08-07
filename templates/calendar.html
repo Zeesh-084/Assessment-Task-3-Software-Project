@@ -5,6 +5,7 @@
 
     <h1>Calendar</h1>
     <hr class="divider">
+    <p>Click on any of your coming up events to edit them</p>
 
     <!-- PASS EVENTS TO JS -->
     <script id="events-json" type="application/json">
@@ -51,6 +52,7 @@
                     <span>Deadline: {{ event.event_deadline }}</span><br>
                     <span>Repeat: {{ event.event_repeat }}</span>
                 </li>
+
                 {% endfor %}
             </ul>
 
@@ -67,6 +69,7 @@
 
         <form id="eventForm" method="POST" action="/save_event">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="source" value="calendar">
 
             <label>Title:</label>
             <input type="text" name="event_detail" required>
@@ -102,6 +105,7 @@
         <form id="editEventForm" method="POST" action="/update_event">
 
             <input type="hidden" name="event_id" id="edit_event_id">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <label>Title:</label>
             <input type="text" name="event_detail" id="edit_event_detail" required>
