@@ -246,5 +246,65 @@ def delete_subject(timetable_id):
     dbHandler.deleteSubject(timetable_id)
     return "OK"
 
+
+@app.route("/calendar")
+def calendar_page():
+    user_id = session.get("user_id")
+    events = dbHandler.getEvents(user_id)
+
+    return render_template("calendar.html", events=events)
+
+
+@app.route("/save_event", methods=["POST"])
+def save_event():
+    user_id = session.get("user_id")
+
+    event_detail = request.form["event_detail"]
+    event_date = request.form["event_date"]
+    event_time = request.form["event_time"]
+    event_repeat = request.form["event_repeat"]
+    event_deadline = request.form["event_deadline"]
+
+    dbHandler.insertEvent(
+        user_id,
+        event_date,
+        event_time,
+        event_repeat,
+        event_deadline,
+        event_detail
+    )
+
+    return redirect("/calendar")
+
+@app.route("/update_event", methods=["POST"])
+def update_event():
+    user_id = session.get("user_id")
+
+    event_id = request.form.get("event_id")
+    event_detail = request.form.get("event_detail")
+    event_date = request.form.get("event_date")
+    event_time = request.form.get("event_time")
+    event_repeat = request.form.get("event_repeat")
+    event_deadline = request.form.get("event_deadline")
+
+    dbHandler.updateEvent(
+        event_id,
+        event_date,
+        event_time,
+        event_repeat,
+        event_deadline,
+        event_detail
+    )
+
+    return redirect("/calendar")
+
+
+@app.route("/delete_event/<int:event_id>", methods=["POST"])
+def delete_event(event_id):
+    dbHandler.deleteEvent(event_id)
+    return "OK"
+
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

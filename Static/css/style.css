@@ -419,7 +419,6 @@ button[type="titles"] {
     border: none;
     font-weight: 600;
     cursor: pointer;
-    background: #eee;
 }
 
 .popup-item select option[value="Not Started"] {
@@ -477,7 +476,6 @@ button[type="titles"] {
     padding: 10px;
     border-radius: 10px;
     border: 2px solid #6e5bb5;
-    background: #fdfdff;
     margin-bottom: 5px;
 }
 
@@ -547,7 +545,6 @@ button[type="titles"] {
 }
 
 .calendar-container {
-    background: #ffffff;
     padding: 20px;
     border-radius: 12px;
     border: 2px solid #6e699b;
@@ -741,5 +738,119 @@ button[type="titles"] {
     width: 100%;
     margin: auto;
     padding: 250px 0;
+}
+
+/*calender.html*/
+.calendar-page{
+    margin-top: 100px;
+    padding: 200px;
+}
+
+.calendar-layout {
+    display: flex;
+    gap: 30px;
+}
+
+.calendar-container {
+    flex: 2;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #6e699b;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.cal-btn {
+    background: #6e699b;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.controls button {
+    background: #8e44ad;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    align-self: center;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.calendar-table th {
+    background: #6e699b;
+    color: white;
+    padding: 10px;
+    border: 2px solid black;
+}
+
+.calendar-table td {
+    height: 70px;
+    border: 2px solid black;
+    background: #d9e7e8;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+}
+
+.calendar-table td:hover {
+    background: #c3d8d9;
+}
+
+.event-dot {
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.events-sidebar {
+    flex: 1;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #6e699b;
+}
+
+.events-list {
+    list-style: none;
+    padding: 0;
+}
+
+.event-item {
+    background: #d9e7e8;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid black;
+}
+
+.add-event-btn {
+    margin-top: 15px;
+    background: #6e699b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
 }
 
