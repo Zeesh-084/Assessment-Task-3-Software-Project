@@ -419,23 +419,64 @@ def deleteEvent(event_id):
 def getSchedule(user_id):
     con = sql.connect("database_files/database.db")
     cur = con.cursor()
-
     cur.execute("""
-        SELECT schedule_day, schedule_time_start, schedule_time_end, schedule_colour, schedule_detail
+        SELECT schedule_id, user_id, schedule_day, schedule_time_start,
+               schedule_time_end, schedule_colour, schedule_detail
         FROM schedule
         WHERE user_id = ?
     """, (user_id,))
-
     rows = cur.fetchall()
     con.close()
 
     return [
         {
-            "schedule_day": row[0],
-            "schedule_time_start": row[1],
-            "schedule_time_end": row[2],
-            "schedule_colour": row[3],
-            "schedule_detail": row[4],
+            "schedule_id": r[0],
+            "user_id": r[1],
+            "schedule_day": r[2],
+            "schedule_time_start": r[3],
+            "schedule_time_end": r[4],
+            "schedule_colour": r[5],
+            "schedule_detail": r[6],
         }
-        for row in rows
+        for r in rows
     ]
+
+
+def insertSchedule(user_id, day, start, end, colour, detail):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+    cur.execute("""
+        INSERT INTO schedule (user_id, schedule_day, schedule_time_start,
+                              schedule_time_end, schedule_colour, schedule_detail)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (user_id, day, start, end, colour, detail))
+    con.commit()
+    con.close()
+
+
+def updateSchedule(schedule_id, day, start, end, colour, detail):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+    cur.execute("""
+        UPDATE schedule
+        SET schedule_day = ?, schedule_time_start = ?, schedule_time_end = ?,
+            schedule_colour = ?, schedule_detail = ?
+        WHERE schedule_id = ?
+    """, (day, start, end, colour, detail, schedule_id))
+    con.commit()
+    con.close()
+
+
+def deleteSchedule(schedule_id, user_id):
+    con = sql.connect("database_files/database.db")
+    cur = con.cursor()
+
+    cur.execute("""
+        DELETE FROM schedule
+        WHERE schedule_id = ? AND user_id = ?
+    """, (schedule_id, user_id))
+
+    con.commit()
+    con.close()
+
+

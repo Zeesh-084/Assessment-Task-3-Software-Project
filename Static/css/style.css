@@ -874,3 +874,50 @@ button[type="titles"] {
     background: #8e44ad;
 }
 
+/*schedule.html*/
+.schedule-page{
+    margin-top: 100px;
+    padding: 200px;
+}
+
+.schedule-grid {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.schedule-grid th {
+    background: #6e699b;
+    color: white;
+    padding: 12px;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.schedule-grid td {
+    border: 2px solid black;
+    background: #d9e7e8;
+    height: 60px;
+    position: relative;
+}
+
+
+.schedule-cell {
+    position: relative;
+    overflow: visible; /* IMPORTANT */
+}
+
+.task-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 6px;
+    padding: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 10;
+}
+

@@ -275,11 +275,11 @@ def save_event():
         event_deadline,
         event_detail
     )
-     
+
     if source == "index":
         return redirect("/index")
-    else:
-        return redirect("/calendar")
+    return redirect("/calendar")
+
 
 @app.route("/update_event", methods=["POST"])
 def update_event():
@@ -310,11 +310,58 @@ def delete_event(event_id):
     return "OK", 200
 
 @app.route("/schedule")
-def schedule_page():
+def schedule():
     user_id = session.get("user_id")
-    schedule = dbHandler.getSchedule(user_id)
+    schedule_rows = dbHandler.getSchedule(user_id)
+    return render_template("schedule.html", schedule=schedule_rows)
 
-    return render_template("schedule.html", schedule=schedule)
+@app.route("/save_schedule", methods=["POST"])
+def save_schedule():
+    user_id = session.get("user_id")
+
+    day = request.form["schedule_day"]
+    start = request.form["schedule_time_start"]
+    end = request.form["schedule_time_end"]
+    colour = request.form["schedule_colour"]
+    detail = request.form["schedule_detail"]
+    description = request.form["schedule_description"]
+
+    source = request.form.get("source", "schedule")
+
+    dbHandler.insertSchedule(user_id, day, start, end, colour, detail)
+
+    if source == "index":
+        return redirect("/index")
+    return redirect("/schedule")
+
+@app.route("/update_schedule", methods=["POST"])
+def update_schedule():
+    schedule_id = request.form["schedule_id"]
+    day = request.form["schedule_day"]
+    start = request.form["schedule_time_start"]
+    end = request.form["schedule_time_end"]
+    colour = request.form["schedule_colour"]
+    detail = request.form["schedule_detail"]
+    description = request.form["schedule_description"]
+
+    source = request.form.get("source", "schedule")
+
+    dbHandler.updateSchedule(schedule_id, day, start, end, colour, detail)
+
+    if source == "index":
+        return redirect("/index")
+    return redirect("/schedule")
+
+
+@app.route("/delete_schedule/<int:schedule_id>", methods=["POST"])
+def delete_schedule(schedule_id):
+    user_id = session.get("user_id")
+
+    dbHandler.deleteSchedule(schedule_id, user_id)
+    return "OK", 200
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

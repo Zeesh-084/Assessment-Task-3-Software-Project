@@ -398,16 +398,16 @@ document.getElementById("deleteTaskYes").onclick = function () {
 
 
 // calender for homepage
-let homeDate = new Date();
+let homeCalDate = new Date();
 
 /* ------------------ RENDER HOMEPAGE CALENDAR ------------------ */
 
 function loadHomeCalendar(events) {
-    const year = homeDate.getFullYear();
-    const month = homeDate.getMonth();
+    const year = homeCalDate.getFullYear();
+    const month = homeCalDate.getMonth();
 
     document.getElementById("calendar-month").innerText =
-        homeDate.toLocaleString("default", { month: "long", year: "numeric" });
+        homeCalDate.toLocaleString("default", { month: "long", year: "numeric" });
 
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -417,12 +417,10 @@ function loadHomeCalendar(events) {
 
     let row = document.createElement("tr");
 
-    // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
         row.appendChild(document.createElement("td"));
     }
 
-    // Loop through days
     for (let day = 1; day <= daysInMonth; day++) {
 
         if (row.children.length === 7) {
@@ -435,60 +433,17 @@ function loadHomeCalendar(events) {
 
         const cellDate = new Date(year, month, day);
 
-        // Find events for this day (using DEADLINE)
-        const dayEvents = events.filter(e => {
-            const [y, m, d] = e.event_deadline.split("-");
-            const eventDate = new Date(Number(y), Number(m) - 1, Number(d));
+        const dayEvents = events.filter(e => eventMatchesDate(e, cellDate));
 
-            const repeat = (e.event_repeat || "").toLowerCase();
-
-            // NON-REPEAT
-            if (!repeat.includes("daily") && !repeat.includes("weekly")) {
-                return eventDate.getTime() === cellDate.getTime();
-            }
-
-            // DAILY REPEAT
-            if (repeat.includes("daily")) {
-                return (
-                    cellDate >= eventDate &&
-                    cellDate.getMonth() === homeDate.getMonth() &&
-                    cellDate.getFullYear() === homeDate.getFullYear()
-                );
-            }
-
-            // WEEKLY REPEAT
-            if (repeat.includes("weekly")) {
-                return (
-                    cellDate >= eventDate &&
-                    cellDate.getDay() === eventDate.getDay() &&
-                    cellDate.getMonth() === homeDate.getMonth() &&
-                    cellDate.getFullYear() === homeDate.getFullYear()
-                );
-            }
-
-            return false;
-        });
-
-        // Add dots + tooltip
         if (dayEvents.length > 0) {
             dayEvents.forEach(ev => {
                 const dot = document.createElement("div");
                 dot.classList.add("event-dot");
 
-                const repeat = (ev.event_repeat || "").toLowerCase();
-                if (repeat.includes("daily")) dot.classList.add("event-dot-daily");
-                if (repeat.includes("weekly")) dot.classList.add("event-dot-weekly");
+                dot.onclick = () => openHomeCalendarEdit(ev.event_id);
 
                 cell.appendChild(dot);
             });
-
-            cell.title = dayEvents.map(ev =>
-                `${ev.event_detail}
-Date: ${ev.event_date}
-Time: ${ev.event_time}
-Repeat: ${ev.event_repeat}
-Deadline: ${ev.event_deadline}`
-            ).join("\n\n");
         }
 
         row.appendChild(cell);
@@ -497,54 +452,201 @@ Deadline: ${ev.event_deadline}`
     body.appendChild(row);
 }
 
-/* ------------------ MONTH NAVIGATION ------------------ */
+/* ------------------ EVENT MATCHING ------------------ */
+
+function eventMatchesDate(event, cellDate) {
+    const [y, m, d] = event.event_date.split("-");
+    const eventDate = new Date(Number(y), Number(m) - 1, Number(d));
+
+    const repeat = (event.event_repeat || "").toLowerCase();
+
+    if (repeat.includes("daily")) {
+        return cellDate >= eventDate;
+    }
+
+    if (repeat.includes("weekly")) {
+        return cellDate.getDay() === eventDate.getDay();
+    }
+
+    if (repeat.includes("monthly")) {
+        return cellDate.getDate() === eventDate.getDate();
+    }
+
+    return cellDate.getTime() === eventDate.getTime();
+}
+
+/* ------------------ MONTH NAV ------------------ */
 
 function prevMonth() {
-    homeDate.setMonth(homeDate.getMonth() - 1);
+    homeCalDate.setMonth(homeCalDate.getMonth() - 1);
     loadHomeCalendar(window.homeEvents);
 }
 
 function nextMonth() {
-    homeDate.setMonth(homeDate.getMonth() + 1);
+    homeCalDate.setMonth(homeCalDate.getMonth() + 1);
     loadHomeCalendar(window.homeEvents);
 }
 
-/* ------------------ ADD EVENT POPUP ------------------ */
+/* ------------------ EDIT POPUP ------------------ */
 
-function openEventPopup() {
-    document.getElementById("eventPopup").style.display = "block";
+function openHomeCalendarEdit(id) {
+    const ev = window.homeEvents.find(e => e.event_id === id);
+    if (!ev) return;
+
+    document.getElementById("edit_event_id").value = ev.event_id;
+    document.getElementById("edit_event_detail").value = ev.event_detail;
+    document.getElementById("edit_event_date").value = ev.event_date;
+    document.getElementById("edit_event_time").value = ev.event_time;
+    document.getElementById("edit_event_repeat").value = ev.event_repeat;
+    document.getElementById("edit_event_deadline").value = ev.event_deadline;
+
+    document.getElementById("editEventPopup").style.display = "block";
 }
 
-function closeEventPopup() {
-    document.getElementById("eventPopup").style.display = "none";
+function closeHomeCalendarEdit() {
+    document.getElementById("editEventPopup").style.display = "none";
 }
 
 /* ------------------ INITIAL LOAD ------------------ */
 
 window.onload = () => {
-    const eventsJson = document.getElementById("events-json").textContent;
-    window.homeEvents = JSON.parse(eventsJson);
+    const eventsJson = document.getElementById("events-json")?.textContent;
+    window.homeEvents = JSON.parse(eventsJson || "[]");
     loadHomeCalendar(window.homeEvents);
 };
 
 
 
 //schedule
-function addScheduleTask() {
-    const tbody = document.getElementById("schedule-body");
+/* ------------------ LOAD SCHEDULE GRID ------------------ */
 
-    const row = document.createElement("tr");
+function loadSchedule(tasks) {
+    const cells = document.querySelectorAll(".schedule-cell");
 
-    row.innerHTML = `
-        <th>New</th>
-        <td><input type="text" class="schedule-input"></td>
-        <td><input type="text" class="schedule-input"></td>
-        <td><input type="text" class="schedule-input"></td>
-        <td><input type="text" class="schedule-input"></td>
-        <td><input type="text" class="schedule-input"></td>
-        <td><input type="text" class="schedule-input"></td>
-        <td><input type="text" class="schedule-input"></td>
-    `;
+    cells.forEach(cell => {
+        const day = cell.dataset.day;
+        const time = cell.dataset.time;
 
-    tbody.appendChild(row);
+        const time24 = convertTo24(time);
+
+        const matches = tasks.filter(t =>
+            t.schedule_day === day &&
+            t.schedule_time_start === time24
+        );
+
+        if (matches.length > 0) {
+            matches.forEach(task => {
+                const box = document.createElement("div");
+                box.classList.add("task-box");
+                box.style.background = task.schedule_colour;
+                box.innerText = task.schedule_detail;
+
+                box.onclick = () => openEditSchedulePopup(task.schedule_id);
+
+                const rows = getDurationRows(task.schedule_time_start, task.schedule_time_end);
+                box.style.height = `${rows * 60}px`;
+
+                cell.appendChild(box);
+            });
+        }
+    });
+}
+
+/* ------------------ TIME CONVERSION ------------------ */
+
+function convertTo24(timeStr) {
+    const map = {
+        "8AM": "08:00",
+        "9AM": "09:00",
+        "10AM": "10:00",
+        "11AM": "11:00",
+        "12PM": "12:00",
+        "1PM": "13:00",
+        "2PM": "14:00",
+        "3PM": "15:00",
+        "4PM": "16:00",
+        "5PM": "17:00",
+        "6PM": "18:00",
+        "7PM": "19:00",
+        "8PM": "20:00",
+        "9PM": "21:00",
+        "10PM": "22:00",
+        "11PM": "23:00",
+        "12AM": "00:00"
+    };
+    return map[timeStr];
+}
+
+/* ------------------ ADD TASK POPUP ------------------ */
+
+function openSchedulePopup() {
+    document.getElementById("schedulePopup").style.display = "block";
+}
+
+function closeSchedulePopup() {
+    document.getElementById("schedulePopup").style.display = "none";
+}
+
+/* ------------------ EDIT TASK POPUP ------------------ */
+
+function openEditSchedulePopup(id) {
+    const task = window.scheduleData.find(t => t.schedule_id === id);
+    if (!task) return;
+
+    document.getElementById("edit_schedule_id").value = task.schedule_id;
+    document.getElementById("edit_schedule_detail").value = task.schedule_detail;
+    document.getElementById("edit_schedule_day").value = task.schedule_day;
+    document.getElementById("edit_schedule_start").value = task.schedule_time_start;
+    document.getElementById("edit_schedule_end").value = task.schedule_time_end;
+    document.getElementById("edit_schedule_colour").value = task.schedule_colour;
+    document.getElementById("edit_schedule_description").value = task.schedule_detail;
+
+    document.getElementById("editSchedulePopup").style.display = "block";
+}
+
+function closeEditSchedulePopup() {
+    document.getElementById("editSchedulePopup").style.display = "none";
+}
+
+/* ------------------ DELETE TASK ------------------ */
+
+function deleteScheduleTask() {
+    const id = document.getElementById("edit_schedule_id").value;
+
+    const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
+
+    fetch(`/delete_schedule/${id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": csrfToken
+        },
+        body: ""
+    })
+    .then(res => {
+        if (res.ok) {
+            window.location.reload();
+        } else {
+            alert("Error deleting task.");
+        }
+    })
+    .catch(() => alert("Error deleting task."));
+}
+
+/* ------------------ INITIAL LOAD ------------------ */
+
+window.onload = () => {
+    const scheduleJson = document.getElementById("schedule-json")?.textContent;
+    window.scheduleData = JSON.parse(scheduleJson || "[]");
+    loadSchedule(window.scheduleData);
+};
+
+/* ------------------ MULTI-HOUR CALC ------------------ */
+
+function getDurationRows(start, end) {
+    const startHour = parseInt(start.split(":")[0]);
+    const endHour = parseInt(end.split(":")[0]);
+    return endHour - startHour;
 }
